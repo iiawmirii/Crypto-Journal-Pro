@@ -1,0 +1,9 @@
+{
+  "name": "CryptoJournal Pro",
+  "description": "An advanced, professional cryptocurrency trading journal featuring a full offline futures calculator, strategy tag performance statistics, stop-loss mistake archive, and image upload support.",
+  "requestFramePermissions": [],
+  "prompt": "",
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

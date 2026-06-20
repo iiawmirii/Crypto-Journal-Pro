@@ -1,0 +1,52 @@
+{
+  "name": "crypto-journal",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron:dev": "vite & electron .",
+    "electron:build": "vite build && electron-builder"
+  },
+  "dependencies": {
+    "@google/genai": "^0.7.0",
+    "lucide-react": "^1.17.0",
+    "motion": "^12.40.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.0",
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "tailwindcss": "^4.3.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  },
+  "build": {
+    "appId": "com.crypto.journalpro",
+    "productName": "Crypto Journal Pro",
+    "directories": {
+      "output": "dist-desktop"
+    },
+    "win": {
+      "icon": "icon.ico",
+      "target": [
+        "nsis"
+      ]
+    },
+    "mac": {
+      "icon": "icon.icns"
+    },
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "package.json"
+    ]
+  }
+}

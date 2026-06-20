@@ -1,0 +1,643 @@
+  /* CryptoJournal Pro - Advanced Modern Stylesheet */
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=SF+Pro+Display:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+  @import "tailwindcss";
+
+  @theme {
+    --font-sans: "SF Pro Display", "Outfit", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+  }
+
+  /* DEFINE THEMES */
+
+  /* LIGHT MODE: Cream/Zinc iOS visual profile */
+  body[data-theme="light"], :root:not([data-theme]) {
+    --bg: #f8fafc;
+    --bg-gradient: none;
+    --card-bg: #ffffff;
+    --border: rgba(9, 9, 11, 0.08);
+    --text: #09090b;
+    --text-dim: #71717a;
+    --gain: #10b981;
+    --loss: #f43f5e;
+    --accent: #2563eb;
+    --accent-glow: rgba(37, 99, 235, 0.08);
+    --accent-soft: rgba(37, 99, 235, 0.04);
+    --input-bg: #f1f5f9;
+    --segment-bg: #f1f5f9;
+    --segment-border: rgba(9, 9, 11, 0.05);
+    --segment-selected: #ffffff;
+    --segment-selected-text: #09090b;
+    --button-primary-bg: #09090b;
+    --button-primary-text: #ffffff;
+    --ring-color: rgba(37, 99, 235, 0.15);
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 8px 24px rgba(0, 0, 0, 0.04);
+    --header-bg: rgba(255, 255, 255, 0.85);
+    --pnl-glow-gain: none;
+    --pnl-glow-loss: none;
+  }
+
+  /* DARK MODE: Ultra-premium Midnight Zinc */
+  body[data-theme="dark"] {
+    --bg: #09090b;
+    --bg-gradient: none;
+    --card-bg: #18181b;
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #fafafa;
+    --text-dim: #a1a1aa;
+    --gain: #10b981;
+    --loss: #f43f5e;
+    --accent: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    --accent-soft: rgba(59, 130, 246, 0.06);
+    --input-bg: #27272a;
+    --segment-bg: #27272a;
+    --segment-border: rgba(255, 255, 255, 0.04);
+    --segment-selected: #3f3f46;
+    --segment-selected-text: #ffffff;
+    --button-primary-bg: #ffffff;
+    --button-primary-text: #09090b;
+    --ring-color: rgba(59, 130, 246, 0.3);
+    --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.4);
+    --header-bg: rgba(9, 9, 11, 0.85);
+    --pnl-glow-gain: none;
+    --pnl-glow-loss: none;
+  }
+  /* BASE STYLING SETUP & SCROLLBAR HIDING */
+  * {
+    box-sizing: border-box;
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
+  }
+
+  ::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, figure, figcaption, blockquote, dl, dd {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'SF Pro Display', 'Outfit', system-ui, sans-serif;
+    background-color: var(--bg);
+    background-image: var(--bg-gradient);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* APP STRUCTURE */
+  .app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
+  }
+
+  .main-header {
+    height: 72px;
+    border-bottom: 1px solid var(--border);
+    background-color: var(--header-bg);
+    backdrop-filter: blur(16px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+  }
+
+  .header-inner {
+    height: 100%;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  .logo b {
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  /* DASHBOARD LAYOUT GRID */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    flex: 1;
+    gap: 32px;
+    padding: 32px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* COMPACT METRICS SYSTEM */
+  .stats-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .panel-title {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .stats-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .stat-item {
+    padding: 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    backdrop-filter: blur(8px);
+    box-shadow: var(--card-shadow);
+    transform: translateY(0);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .stat-item.positive .stat-value {
+    color: var(--gain);
+  }
+
+  .stat-item.negative .stat-value {
+    color: var(--loss);
+  }
+
+  .stat-item.large {
+    background: var(--card-bg);
+    border-color: var(--accent);
+  }
+
+  .stat-item.large .stat-value {
+    font-size: 1.6rem;
+    color: var(--text);
+  }
+
+  /* CARDS WITH RESPONSIVE DENSITY */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--card-shadow);
+    animation: cardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (max-width: 640px) {
+    .card {
+      padding: 16px;
+      border-radius: 12px;
+    }
+  }
+
+  /* FORM GRID */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    width: 100%;
+  }
+
+  /* MODERN FORM ELEMENTS & INPUTS */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .field input, .field select, .field textarea {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    outline: none;
+    transition: all 0.15s ease;
+  }
+
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--ring-color);
+    background: var(--card-bg);
+  }
+
+  /* TRANSITIONAL CAPSULES & iOS PILL CONTROLS */
+  .ios-segmented-track {
+    background: var(--segment-bg);
+    border: 1px solid var(--segment-border);
+    padding: 3px;
+    border-radius: 99px;
+    display: flex;
+    position: relative;
+    gap: 2px;
+  }
+
+  .ios-segment-btn {
+    flex: 1;
+    padding: 8px 14px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border-radius: 99px;
+    border: none;
+    color: var(--text-dim);
+    background: transparent;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+  }
+
+  .ios-segment-btn:hover {
+    color: var(--text);
+  }
+
+  .ios-segment-btn.active {
+    color: var(--segment-selected-text);
+    background: var(--segment-selected);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  /* AUDIT & PRIMARY BUTTONS */
+  .ai-audit-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    transition: all 0.2s ease;
+  }
+
+  .ai-audit-btn:hover:not(:disabled) {
+    background: var(--accent);
+    color: #ffffff;
+    box-shadow: 0 4px 12px var(--accent-glow);
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--button-primary-bg);
+    color: var(--button-primary-text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+  }
+
+  .submit-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* HISTORIC LEDGER ITEMS WITH SYMMETRY */
+  .trade-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: all 0.2s ease;
+  }
+
+  .trade-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .trade-card.gain {
+    border-left: 3px solid var(--gain);
+  }
+
+  .trade-card.loss {
+    border-left: 3px solid var(--loss);
+  }
+
+  .trade-card-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  @media (max-width: 540px) {
+    .trade-card-main {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  }
+
+  .trade-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .trade-math {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .trade-card:hover .trade-math {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(2px);
+  }
+
+  @media (max-width: 540px) {
+    .trade-math {
+      align-items: flex-start;
+    }
+  }
+
+  /* EDIT BUTTON */
+  .edit-btn {
+    position: absolute;
+    top: 14px; right: 48px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s ease;
+  }
+
+  .trade-card:hover .edit-btn {
+    opacity: 1;
+  }
+
+  .edit-btn:hover {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+  }
+
+  /* TRASH BUTTON */
+  .del-btn {
+    position: absolute;
+    top: 14px; right: 14px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s ease;
+  }
+
+  .trade-card:hover .del-btn {
+    opacity: 1;
+  }
+
+  .del-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--loss);
+  }
+
+  @media (max-width: 768px) {
+    .del-btn, .edit-btn {
+      opacity: 1 !important;
+    }
+  }
+
+  /* COACHING DIALOG */
+  .ai-critique-box {
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: var(--card-shadow);
+    animation: cardEntrance 0.3s ease;
+  }
+
+  /* THEME ACCENT CHIPS */
+  .theme-accent-pip {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .theme-accent-pip.active {
+    border-color: var(--text);
+  }
+
+  .empty-history {
+    padding: 36px 20px;
+    color: var(--text-dim);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.85rem;
+  }
+
+  /* ANIMATIONS */
+  @keyframes cardEntrance {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* RESPONSIVENESS WITH SYMMETRICAL PADDING */
+  @media (max-width: 1150px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+      padding: 24px;
+      gap: 24px;
+    }
+    .header-inner {
+      padding: 0 24px;
+    }
+    .hide-stats-on-mobile {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .main-header {
+      height: auto;
+      padding: 12px 0;
+    }
+    .header-inner {
+      padding: 0 16px;
+      flex-direction: column;
+      gap: 12px;
+      height: auto;
+    }
+    .dashboard-grid {
+      padding: 16px;
+    }
+  }
+
+  /* HIDE BROWSER NUMBER SPINNERS FOR ALL IN-APP INPUTS */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  /* DEDICATED QUICK JOURNAL SPACING ENGINE */
+  .quick-journal-wrapper {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    margin-top: 24px;
+  }
+
+  .quick-journal-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 24px !important;
+  }
+
+  .quick-journal-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px !important;
+  }
+
+  @media (min-width: 768px) {
+    .quick-journal-grid {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+
+  .quick-journal-actions {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    margin-top: 8px;
+  }
+
+  @media (min-width: 640px) {
+    .quick-journal-actions {
+      flex-direction: row;
+    }
+  }
+
+  /* DETAILED SPACING ENGINE FOR COMPUTED METRICS */
+  .computed-stats-box {
+    padding: 18px !important;
+    border-radius: 12px !important;
+    border: 1px solid var(--border) !important;
+    background: var(--input-bg) !important;
+    display: flex;
+    flex-direction: column;
+    gap: 14px !important;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.01);
+  }
+
+  /* ensure inner borders and dividers inside computed boxes have correct top margins and padding */
+  .computed-stats-box-divider {
+    border-top: 1px solid var(--border) !important;
+    padding-top: 14px !important;
+    margin-top: 2px !important;
+  }
+
