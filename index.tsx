@@ -566,7 +566,7 @@ function App() {
                                 type="button" 
                                 key={err}
                                 onClick={() => setForm({...form, stopLossReason: err})}
-                                className="px-2 py-0.5 bg-[var(--input-bg)] hover:bg-[var(--segment-bg)] rounded-md border border-[var(--border)] hover:border-[var(--accent)] transition-all text-[var(--text-[var(--text-dim)])] hover:text-[var(--text)] font-semibold"
+                                className="px-2 py-0.5 bg-[var(--input-bg)] hover:bg-[var(--segment-bg)] rounded-md border border-[var(--border)] hover:border-[var(--accent)] transition-all text-[var(--text-dim)] hover:text-[var(--text)] font-semibold"
                               >
                                 {err}
                               </button>

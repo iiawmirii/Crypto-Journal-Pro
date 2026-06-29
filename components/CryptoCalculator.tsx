@@ -1,11 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { TradeResult, Trade } from '../types';
-import { Calculator, ArrowRight, CornerDownLeft, Sparkles, TrendingUp, TrendingDown } from 'lucide-react';
+import { Calculator, ArrowRight, CornerDownLeft, Sparkles, TrendingUp, TrendingDown, Plus, Trash2 } from 'lucide-react';
 import { generateId } from '../utils';
 
 interface CryptoCalculatorProps {
   onLogTrade: (trade: Trade) => void;
 }
+
+const getDefaultPcts = (length: number): string[] => {
+  if (length === 1) return ['100'];
+  if (length === 2) return ['50', '50'];
+  if (length === 3) return ['40', '30', '30'];
+  if (length === 4) return ['25', '25', '25', '25'];
+  if (length === 5) return ['20', '20', '20', '20', '20'];
+  
+  const base = Math.floor(100 / length);
+  const remainder = 100 % length;
+  return Array.from({ length }, (_, i) => 
+    (base + (i < remainder ? 1 : 0)).toString()
+  );
+};
 
 export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) {
   const [direction, setDirection] = useState<'long' | 'short'>('long');
@@ -14,13 +28,11 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
   const [leverage, setLeverage] = useState<string>('10');
   const [margin, setMargin] = useState<string>('100');
 
-  // 5 Target Steps
+  // Target Steps
   const [targets, setTargets] = useState<{ price: string; pct: string }[]>([
-    { price: '52000', pct: '20' },
-    { price: '54000', pct: '20' },
-    { price: '56000', pct: '20' },
-    { price: '58000', pct: '20' },
-    { price: '60000', pct: '20' },
+    { price: '52000', pct: '40' },
+    { price: '54000', pct: '30' },
+    { price: '56000', pct: '30' },
   ]);
 
   // Autofill targets based on Entry & Stop Loss to help user experience
@@ -31,19 +43,22 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
       const risk = Math.abs(entry - sl);
       const isLong = direction === 'long';
       
-      const newTargets = Array.from({ length: 5 }, (_, i) => {
+      const numTargets = targets.length;
+      const defaultPcts = getDefaultPcts(numTargets);
+
+      const newTargets = Array.from({ length: numTargets }, (_, i) => {
         const stepMultiplier = i + 1;
         const targetPriceVal = isLong 
           ? entry + (risk * stepMultiplier)
           : entry - (risk * stepMultiplier);
         return {
           price: Math.max(0, targetPriceVal).toFixed(2),
-          pct: '20'
+          pct: targets[i]?.pct || defaultPcts[i]
         };
       });
       setTargets(newTargets);
     }
-  }, [entryPrice, stopLoss, direction]);
+  }, [entryPrice, stopLoss, direction, targets.length]);
 
   // Calculations
   const entry = parseFloat(entryPrice) || 0;
@@ -90,6 +105,57 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
     const next = [...targets];
     next[index] = { ...next[index], [field]: value };
     setTargets(next);
+  };
+
+  const handleAddTarget = () => {
+    const nextLength = targets.length + 1;
+    const entry = parseFloat(entryPrice);
+    const sl = parseFloat(stopLoss);
+    const isLong = direction === 'long';
+
+    let newPrice = '';
+    if (!isNaN(entry) && !isNaN(sl) && entry > 0) {
+      const risk = Math.abs(entry - sl);
+      const targetPriceVal = isLong 
+        ? entry + (risk * nextLength)
+        : entry - (risk * nextLength);
+      newPrice = Math.max(0, targetPriceVal).toFixed(2);
+    }
+
+    const defaultPcts = getDefaultPcts(nextLength);
+    const updatedTargets = [
+      ...targets.map((t, idx) => ({ ...t, pct: defaultPcts[idx] })),
+      { price: newPrice, pct: defaultPcts[nextLength - 1] }
+    ];
+    setTargets(updatedTargets);
+  };
+
+  const handleDeleteTarget = (indexToDelete: number) => {
+    if (targets.length <= 1) return;
+    const nextLength = targets.length - 1;
+    const filtered = targets.filter((_, idx) => idx !== indexToDelete);
+
+    const entry = parseFloat(entryPrice);
+    const sl = parseFloat(stopLoss);
+    const isLong = direction === 'long';
+    const defaultPcts = getDefaultPcts(nextLength);
+
+    const updatedTargets = filtered.map((t, idx) => {
+      let priceVal = t.price;
+      if (!isNaN(entry) && !isNaN(sl) && entry > 0) {
+        const risk = Math.abs(entry - sl);
+        const targetPriceVal = isLong 
+          ? entry + (risk * (idx + 1))
+          : entry - (risk * (idx + 1));
+        priceVal = Math.max(0, targetPriceVal).toFixed(2);
+      }
+      return {
+        price: priceVal,
+        pct: defaultPcts[idx]
+      };
+    });
+
+    setTargets(updatedTargets);
   };
 
   const [tradeForm, setTradeForm] = useState({
@@ -236,13 +302,22 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
 
         {/* Right Side: Step Target Outputs */}
         <div className="flex flex-col gap-4">
-          <div className="text-[10px] font-semibold tracking-wider text-[var(--text-dim)] uppercase">
-            5 STEPS OF TAKE-PROFIT CLOSE TARGETS (EDITABLE)
+          <div className="flex items-center justify-between gap-2 border-b pb-1.5" style={{ borderColor: 'var(--border)' }}>
+            <span className="text-[10px] font-bold tracking-wider text-[var(--text-dim)] uppercase">
+              TAKE-PROFIT TARGETS ({targets.length})
+            </span>
+            <button
+              type="button"
+              className="flex items-center gap-1 px-2 py-1 text-[10px] font-bold bg-[var(--accent-soft)] hover:bg-[var(--accent)] text-[var(--accent)] hover:text-white rounded-lg transition-all border border-[var(--border)] active:scale-95 shadow-sm"
+              onClick={handleAddTarget}
+            >
+              <Plus className="w-3.5 h-3.5" /> ADD TARGET
+            </button>
           </div>
 
           <div className="flex flex-col gap-2">
             {targets.map((t, idx) => {
-              const stepCalc = calculatedTargets[idx];
+              const stepCalc = calculatedTargets[idx] || { price: 0, pct: 0, profit: 0 };
               return (
                 <div key={idx} className="flex gap-3 items-center py-2 px-3 rounded-xl border border-[var(--border)]" style={{ background: 'var(--input-bg)' }}>
                   <span className="text-[10px] w-6 h-6 rounded-md flex items-center justify-center font-mono font-bold shrink-0" style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', color: 'var(--text-dim)' }}>
@@ -281,6 +356,16 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
                       {stepCalc.profit >= 0 ? '+' : ''}${stepCalc.profit.toFixed(1)}
                     </span>
                   </div>
+                  {targets.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteTarget(idx)}
+                      className="text-[var(--text-dim)] hover:text-rose-500 p-1 rounded transition-all cursor-pointer hover:bg-[var(--card-bg)] shrink-0"
+                      title="Delete target step"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               );
             })}
