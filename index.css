@@ -7,60 +7,87 @@
     --font-mono: "JetBrains Mono", monospace;
   }
 
-  /* DEFINE THEMES */
+  /* DEFINE THEMES (Google Material Design 3 Color Roles) */
 
-  /* LIGHT MODE: Cream/Zinc iOS visual profile */
+  /* LIGHT MODE: Material 3 Lavender/Indigo profile */
   body[data-theme="light"], :root:not([data-theme]) {
-    --bg: #f8fafc;
-    --bg-gradient: none;
+    --bg: #fef7ff;
+    --bg-gradient: radial-gradient(120% 120% at 50% 10%, #fef7ff 40%, #f3edf7 100%);
     --card-bg: #ffffff;
-    --border: rgba(9, 9, 11, 0.08);
-    --text: #09090b;
-    --text-dim: #71717a;
-    --gain: #10b981;
-    --loss: #f43f5e;
-    --accent: #2563eb;
-    --accent-glow: rgba(37, 99, 235, 0.08);
-    --accent-soft: rgba(37, 99, 235, 0.04);
-    --input-bg: #f1f5f9;
-    --segment-bg: #f1f5f9;
-    --segment-border: rgba(9, 9, 11, 0.05);
-    --segment-selected: #ffffff;
-    --segment-selected-text: #09090b;
-    --button-primary-bg: #09090b;
+    --border: #e6e0e9;
+    --text: #1d1b20;
+    --text-dim: #49454f;
+    --gain: #2e7d32;
+    --loss: #b3261e;
+    --accent: #6750a4;
+    --accent-glow: rgba(103, 80, 164, 0.12);
+    --accent-soft: #e8def8;
+    --input-bg: #f3edf7;
+    --segment-bg: #ece6f0;
+    --segment-border: #cac4d0;
+    --segment-selected: #e8def8;
+    --segment-selected-text: #21005d;
+    --button-primary-bg: #6750a4;
     --button-primary-text: #ffffff;
-    --ring-color: rgba(37, 99, 235, 0.15);
-    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 8px 24px rgba(0, 0, 0, 0.04);
-    --header-bg: rgba(255, 255, 255, 0.85);
+    --ring-color: rgba(103, 80, 164, 0.25);
+    --card-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.05), 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
+    --header-bg: rgba(254, 247, 255, 0.9);
     --pnl-glow-gain: none;
     --pnl-glow-loss: none;
   }
 
-  /* DARK MODE: Ultra-premium Midnight Zinc */
+  /* DARK MODE: Material 3 Amethyst/Plum Midnight profile */
   body[data-theme="dark"] {
-    --bg: #09090b;
-    --bg-gradient: none;
-    --card-bg: #18181b;
-    --border: rgba(255, 255, 255, 0.08);
-    --text: #fafafa;
-    --text-dim: #a1a1aa;
-    --gain: #10b981;
-    --loss: #f43f5e;
-    --accent: #3b82f6;
-    --accent-glow: rgba(59, 130, 246, 0.15);
-    --accent-soft: rgba(59, 130, 246, 0.06);
-    --input-bg: #27272a;
-    --segment-bg: #27272a;
-    --segment-border: rgba(255, 255, 255, 0.04);
-    --segment-selected: #3f3f46;
-    --segment-selected-text: #ffffff;
-    --button-primary-bg: #ffffff;
-    --button-primary-text: #09090b;
-    --ring-color: rgba(59, 130, 246, 0.3);
-    --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.4);
-    --header-bg: rgba(9, 9, 11, 0.85);
+    --bg: #141218;
+    --bg-gradient: radial-gradient(120% 120% at 50% 10%, #141218 50%, #1d1b20 100%);
+    --card-bg: #1d1b20;
+    --border: #49454f;
+    --text: #e6e1e5;
+    --text-dim: #cac4d0;
+    --gain: #81c784;
+    --loss: #f2b8b5;
+    --accent: #d0bcff;
+    --accent-glow: rgba(208, 188, 255, 0.15);
+    --accent-soft: #4f378b;
+    --input-bg: #2b2930;
+    --segment-bg: #2b2930;
+    --segment-border: #49454f;
+    --segment-selected: #4f378b;
+    --segment-selected-text: #e8def8;
+    --button-primary-bg: #d0bcff;
+    --button-primary-text: #381e72;
+    --ring-color: rgba(208, 188, 255, 0.35);
+    --card-shadow: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+    --header-bg: rgba(20, 18, 24, 0.9);
     --pnl-glow-gain: none;
     --pnl-glow-loss: none;
+  }
+
+  /* AMOLED MODE: Pure high-contrast pitch-black visual layout */
+  body[data-theme="amoled"] {
+    --bg: #000000;
+    --bg-gradient: none;
+    --card-bg: #09090b;
+    --border: #222226;
+    --text: #ffffff;
+    --text-dim: #9e9ea8;
+    --gain: #10b981;
+    --loss: #ef4444;
+    --accent: #ffffff;
+    --accent-glow: rgba(255, 255, 255, 0.15);
+    --accent-soft: #222226;
+    --input-bg: #000000;
+    --segment-bg: #09090b;
+    --segment-border: #222226;
+    --segment-selected: #ffffff;
+    --segment-selected-text: #000000;
+    --button-primary-bg: #ffffff;
+    --button-primary-text: #000000;
+    --ring-color: rgba(255, 255, 255, 0.4);
+    --card-shadow: none;
+    --header-bg: rgba(0, 0, 0, 0.9);
+    --pnl-glow-gain: 0 0 10px rgba(16, 185, 129, 0.2);
+    --pnl-glow-loss: 0 0 10px rgba(239, 68, 68, 0.2);
   }
   /* BASE STYLING SETUP & SCROLLBAR HIDING */
   * {

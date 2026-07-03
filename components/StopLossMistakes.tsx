@@ -41,7 +41,7 @@ export default function StopLossMistakes({ trades }: StopLossMistakesProps) {
             <p className="text-xs text-[var(--text-dim)]">Pinpoint and review recurring tactical errors and volatility triggers offline.</p>
           </div>
         </div>
-        <div className="flex bg-rose-500/10 text-rose-500 px-2.5 py-0.5 border border-rose-500/15 rounded-lg font-mono text-[10px] font-semibold">
+        <div className="flex bg-rose-500/10 text-rose-500 px-3 py-1 border border-rose-500/15 rounded-full font-mono text-[10px] font-semibold tracking-wider">
           {totalSLHitsCount} STOP LOG{totalSLHitsCount !== 1 ? 'S' : ''} ACTIVE
         </div>
       </div>
@@ -50,7 +50,7 @@ export default function StopLossMistakes({ trades }: StopLossMistakesProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           
           {/* Key statistical box */}
-          <div className="md:col-span-1 p-4 rounded-xl flex flex-col justify-between gap-5 border border-[var(--border)]" 
+          <div className="md:col-span-1 p-5 rounded-2xl flex flex-col justify-between gap-5 border border-[var(--border)]" 
                style={{ 
                  background: 'linear-gradient(135deg, var(--segment-bg) 0%, rgba(239, 68, 68, 0.03) 100%)',
                }}>
@@ -62,7 +62,7 @@ export default function StopLossMistakes({ trades }: StopLossMistakesProps) {
               </p>
             </div>
             
-            <div className="p-3 rounded-lg border font-mono text-[10px] flex items-start gap-2" style={{ background: 'var(--input-bg)', borderColor: 'var(--border)', color: 'var(--text-dim)' }}>
+            <div className="p-3 rounded-xl border font-mono text-[10px] flex items-start gap-2" style={{ background: 'var(--input-bg)', borderColor: 'var(--border)', color: 'var(--text-dim)' }}>
               <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
               <span className="leading-normal">Identifying specific activation patterns is the fastest path to profitability. Do not repeat identical errors.</span>
             </div>
@@ -74,10 +74,10 @@ export default function StopLossMistakes({ trades }: StopLossMistakesProps) {
             
             <div className="flex flex-col gap-2 max-h-[350px] overflow-y-auto pr-1">
               {groupedMistakes.map((item, idx) => (
-                <div key={item.reason} className="p-3.5 rounded-lg border flex justify-between items-center gap-4 transition-all" 
+                <div key={item.reason} className="p-4 rounded-xl border flex justify-between items-center gap-4 transition-all hover:bg-[var(--accent-soft)]" 
                      style={{ background: 'var(--card-bg)', borderColor: 'var(--border)' }}>
                   <div className="flex items-start gap-3">
-                    <span className="text-[10px] font-mono font-bold w-5.5 h-5.5 rounded-md flex items-center justify-center border border-[var(--border)]" 
+                    <span className="text-[10px] font-mono font-bold w-6 h-6 rounded-lg flex items-center justify-center border border-[var(--border)]" 
                           style={{ background: 'var(--input-bg)', color: 'var(--text-dim)' }}>
                       {idx + 1}
                     </span>
@@ -101,7 +101,7 @@ export default function StopLossMistakes({ trades }: StopLossMistakesProps) {
           
         </div>
       ) : (
-        <div className="p-10 border border-dashed rounded-xl flex flex-col items-center justify-center gap-2 text-center" 
+        <div className="p-10 border border-dashed rounded-2xl flex flex-col items-center justify-center gap-2 text-center" 
              style={{ borderColor: 'var(--border)', background: 'var(--input-bg)' }}>
           <div className="p-2.5 rounded-full bg-emerald-500/10 text-emerald-400 mb-1">
             <Frown className="w-6 h-6" />

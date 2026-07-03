@@ -11,6 +11,7 @@ import { generateId } from './utils';
 import CryptoCalculator from './components/CryptoCalculator';
 import StopLossMistakes from './components/StopLossMistakes';
 import PnLStats from './components/PnLStats';
+import SettingsTab from './components/SettingsTab';
 import { 
   Activity, 
   ArrowUpRight, 
@@ -20,14 +21,14 @@ import {
   Calculator, 
   ShieldAlert, 
   Image as ImageIcon, 
-  UploadCloud, 
+  Upload, 
   X, 
   BookOpen, 
   Trash2, 
   Maximize2,
   Sun,
   Moon,
-  Palette,
+  Settings,
   Check,
   Terminal,
   ChevronDown,
@@ -38,7 +39,336 @@ import {
   Download
 } from 'lucide-react';
 
-type AppTheme = 'light' | 'dark';
+type AppTheme = 'light' | 'dark' | 'amoled';
+
+interface M3ColorSet {
+  accent: string;
+  accentSoft: string;
+  accentGlow: string;
+  buttonPrimaryBg: string;
+  buttonPrimaryText: string;
+  segmentSelected: string;
+  segmentSelectedText: string;
+  bg?: string;
+  bgGradient?: string;
+  cardBg?: string;
+  border?: string;
+}
+
+interface M3ThemePalette {
+  id: string;
+  light: M3ColorSet;
+  dark: M3ColorSet;
+}
+
+const PALETTES: M3ThemePalette[] = [
+  {
+    id: 'blue',
+    light: {
+      accent: '#00639b',
+      accentSoft: '#cbe6ff',
+      accentGlow: 'rgba(0, 99, 155, 0.12)',
+      buttonPrimaryBg: '#00639b',
+      buttonPrimaryText: '#ffffff',
+      segmentSelected: '#cbe6ff',
+      segmentSelectedText: '#001d35',
+      bg: '#f8f9ff',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #f8f9ff 40%, #eef3ff 100%)',
+      cardBg: '#ffffff',
+      border: '#dee3eb'
+    },
+    dark: {
+      accent: '#93ccff',
+      accentSoft: '#004a75',
+      accentGlow: 'rgba(147, 204, 255, 0.15)',
+      buttonPrimaryBg: '#93ccff',
+      buttonPrimaryText: '#003354',
+      segmentSelected: '#004a75',
+      segmentSelectedText: '#cbe6ff',
+      bg: '#0f131a',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #0f131a 50%, #171d26 100%)',
+      cardBg: '#171d26',
+      border: '#3a414c'
+    }
+  },
+  {
+    id: 'purple',
+    light: {
+      accent: '#6750a4',
+      accentSoft: '#e8def8',
+      accentGlow: 'rgba(103, 80, 164, 0.12)',
+      buttonPrimaryBg: '#6750a4',
+      buttonPrimaryText: '#ffffff',
+      segmentSelected: '#e8def8',
+      segmentSelectedText: '#21005d',
+      bg: '#fef7ff',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #fef7ff 40%, #f3edf7 100%)',
+      cardBg: '#ffffff',
+      border: '#e6e0e9'
+    },
+    dark: {
+      accent: '#d0bcff',
+      accentSoft: '#4f378b',
+      accentGlow: 'rgba(208, 188, 255, 0.15)',
+      buttonPrimaryBg: '#d0bcff',
+      buttonPrimaryText: '#381e72',
+      segmentSelected: '#4f378b',
+      segmentSelectedText: '#e8def8',
+      bg: '#141218',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #141218 50%, #1d1b20 100%)',
+      cardBg: '#1d1b20',
+      border: '#49454f'
+    }
+  },
+  {
+    id: 'jade',
+    light: {
+      accent: '#386a20',
+      accentSoft: '#e9f5dd',
+      accentGlow: 'rgba(56, 106, 32, 0.12)',
+      buttonPrimaryBg: '#386a20',
+      buttonPrimaryText: '#ffffff',
+      segmentSelected: '#e9f5dd',
+      segmentSelectedText: '#042100',
+      bg: '#f7faf3',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #f7faf3 40%, #edf3e4 100%)',
+      cardBg: '#ffffff',
+      border: '#e1e5d9'
+    },
+    dark: {
+      accent: '#b1d18a',
+      accentSoft: '#205115',
+      accentGlow: 'rgba(177, 209, 138, 0.15)',
+      buttonPrimaryBg: '#b1d18a',
+      buttonPrimaryText: '#113807',
+      segmentSelected: '#205115',
+      segmentSelectedText: '#e9f5dd',
+      bg: '#10140f',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #10140f 50%, #171c15 100%)',
+      cardBg: '#171c15',
+      border: '#3e4438'
+    }
+  },
+  {
+    id: 'terracotta',
+    light: {
+      accent: '#ba1a1a',
+      accentSoft: '#ffdad6',
+      accentGlow: 'rgba(186, 26, 26, 0.12)',
+      buttonPrimaryBg: '#ba1a1a',
+      buttonPrimaryText: '#ffffff',
+      segmentSelected: '#ffdad6',
+      segmentSelectedText: '#410002',
+      bg: '#fff8f7',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #fff8f7 40%, #fceeec 100%)',
+      cardBg: '#ffffff',
+      border: '#f5dedc'
+    },
+    dark: {
+      accent: '#ffb4ab',
+      accentSoft: '#93000a',
+      accentGlow: 'rgba(255, 180, 171, 0.15)',
+      buttonPrimaryBg: '#ffb4ab',
+      buttonPrimaryText: '#690005',
+      segmentSelected: '#93000a',
+      segmentSelectedText: '#ffdad6',
+      bg: '#1a1110',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #1a1110 50%, #231918 100%)',
+      cardBg: '#231918',
+      border: '#524341'
+    }
+  },
+  {
+    id: 'peach',
+    light: {
+      accent: '#8b5000',
+      accentSoft: '#ffdcbe',
+      accentGlow: 'rgba(139, 80, 0, 0.12)',
+      buttonPrimaryBg: '#8b5000',
+      buttonPrimaryText: '#ffffff',
+      segmentSelected: '#ffdcbe',
+      segmentSelectedText: '#2c1600',
+      bg: '#fff8f3',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #fff8f3 40%, #faeee4 100%)',
+      cardBg: '#ffffff',
+      border: '#f2dfd1'
+    },
+    dark: {
+      accent: '#ffb85d',
+      accentSoft: '#562f00',
+      accentGlow: 'rgba(255, 184, 93, 0.15)',
+      buttonPrimaryBg: '#ffb85d',
+      buttonPrimaryText: '#301400',
+      segmentSelected: '#562f00',
+      segmentSelectedText: '#ffdcbe',
+      bg: '#18120c',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #18120c 50%, #211a12 100%)',
+      cardBg: '#211a12',
+      border: '#4f453a'
+    }
+  },
+  {
+    id: 'teal',
+    light: {
+      accent: '#006a6a',
+      accentSoft: '#bfebeb',
+      accentGlow: 'rgba(0, 106, 106, 0.12)',
+      buttonPrimaryBg: '#006a6a',
+      buttonPrimaryText: '#ffffff',
+      segmentSelected: '#bfebeb',
+      segmentSelectedText: '#002020',
+      bg: '#f4fafb',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #f4fafb 40%, #e6f2f3 100%)',
+      cardBg: '#ffffff',
+      border: '#dbe4e5'
+    },
+    dark: {
+      accent: '#80d5d4',
+      accentSoft: '#005050',
+      accentGlow: 'rgba(128, 213, 212, 0.15)',
+      buttonPrimaryBg: '#80d5d4',
+      buttonPrimaryText: '#003737',
+      segmentSelected: '#005050',
+      segmentSelectedText: '#bfebeb',
+      bg: '#0d1515',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #0d1515 50%, #151e1e 100%)',
+      cardBg: '#151e1e',
+      border: '#3a4445'
+    }
+  },
+  {
+    id: 'rose',
+    light: {
+      accent: '#984061',
+      accentSoft: '#ffd9e2',
+      accentGlow: 'rgba(152, 64, 97, 0.12)',
+      buttonPrimaryBg: '#984061',
+      buttonPrimaryText: '#ffffff',
+      segmentSelected: '#ffd9e2',
+      segmentSelectedText: '#3e001d',
+      bg: '#fff8f8',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #fff8f8 40%, #faedf0 100%)',
+      cardBg: '#ffffff',
+      border: '#f4dde2'
+    },
+    dark: {
+      accent: '#ffb1c8',
+      accentSoft: '#7d2249',
+      accentGlow: 'rgba(255, 177, 200, 0.15)',
+      buttonPrimaryBg: '#ffb1c8',
+      buttonPrimaryText: '#5e0031',
+      segmentSelected: '#7d2249',
+      segmentSelectedText: '#ffd9e2',
+      bg: '#1b1114',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #1b1114 50%, #24181a 100%)',
+      cardBg: '#24181a',
+      border: '#514347'
+    }
+  },
+  {
+    id: 'emerald',
+    light: {
+      accent: '#006e1c',
+      accentSoft: '#b6f5b3',
+      accentGlow: 'rgba(0, 110, 28, 0.12)',
+      buttonPrimaryBg: '#006e1c',
+      buttonPrimaryText: '#ffffff',
+      segmentSelected: '#b6f5b3',
+      segmentSelectedText: '#002203',
+      bg: '#f5faf4',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #f5faf4 40%, #e7f2e6 100%)',
+      cardBg: '#ffffff',
+      border: '#dbe4db'
+    },
+    dark: {
+      accent: '#9bd898',
+      accentSoft: '#005311',
+      accentGlow: 'rgba(155, 216, 152, 0.15)',
+      buttonPrimaryBg: '#9bd898',
+      buttonPrimaryText: '#00390a',
+      segmentSelected: '#005311',
+      segmentSelectedText: '#b6f5b3',
+      bg: '#0e1510',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #0e1510 50%, #151f16 100%)',
+      cardBg: '#151f16',
+      border: '#3a443b'
+    }
+  },
+  {
+    id: 'crimson',
+    light: {
+      accent: '#b52555',
+      accentSoft: '#ffd9e1',
+      accentGlow: 'rgba(181, 37, 85, 0.12)',
+      buttonPrimaryBg: '#b52555',
+      buttonPrimaryText: '#ffffff',
+      segmentSelected: '#ffd9e1',
+      segmentSelectedText: '#3f0015',
+      bg: '#fff8f8',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #fff8f8 40%, #faecee 100%)',
+      cardBg: '#ffffff',
+      border: '#f5dedf'
+    },
+    dark: {
+      accent: '#ffb1c3',
+      accentSoft: '#91023a',
+      accentGlow: 'rgba(255, 177, 195, 0.15)',
+      buttonPrimaryBg: '#ffb1c3',
+      buttonPrimaryText: '#5f0022',
+      segmentSelected: '#91023a',
+      segmentSelectedText: '#ffd9e1',
+      bg: '#1c1112',
+      bgGradient: 'radial-gradient(120% 120% at 50% 10%, #1c1112 50%, #25191b 100%)',
+      cardBg: '#25191b',
+      border: '#524344'
+    }
+  }
+];
+
+const applyM3Theme = (themeCategory: 'light' | 'dark' | 'amoled', colorId: string) => {
+  document.body.setAttribute('data-theme', themeCategory);
+  const body = document.body;
+  
+  if (themeCategory === 'amoled') {
+    // In AMOLED, clean out style overrides so CSS stylesheet's base AMOLED variables take effect directly
+    body.style.removeProperty('--accent');
+    body.style.removeProperty('--accent-soft');
+    body.style.removeProperty('--accent-glow');
+    body.style.removeProperty('--button-primary-bg');
+    body.style.removeProperty('--button-primary-text');
+    body.style.removeProperty('--segment-selected');
+    body.style.removeProperty('--segment-selected-text');
+    body.style.removeProperty('--bg');
+    body.style.removeProperty('--bg-gradient');
+    body.style.removeProperty('--card-bg');
+    body.style.removeProperty('--border');
+    return;
+  }
+  
+  const palette = PALETTES.find(p => p.id === colorId) || PALETTES[0];
+  const target = themeCategory === 'light' ? palette.light : palette.dark;
+  
+  // Set properties on document.body as inline styles to override specific body[data-theme] classes in external stylesheet
+  body.style.setProperty('--accent', target.accent);
+  body.style.setProperty('--accent-soft', target.accentSoft);
+  body.style.setProperty('--accent-glow', target.accentGlow);
+  body.style.setProperty('--button-primary-bg', target.buttonPrimaryBg);
+  body.style.setProperty('--button-primary-text', target.buttonPrimaryText);
+  body.style.setProperty('--segment-selected', target.segmentSelected);
+  body.style.setProperty('--segment-selected-text', target.segmentSelectedText);
+  
+  if (target.bg) body.style.setProperty('--bg', target.bg);
+  else body.style.removeProperty('--bg');
+
+  if (target.bgGradient) body.style.setProperty('--bg-gradient', target.bgGradient);
+  else body.style.removeProperty('--bg-gradient');
+
+  if (target.cardBg) body.style.setProperty('--card-bg', target.cardBg);
+  else body.style.removeProperty('--card-bg');
+
+  if (target.border) body.style.setProperty('--border', target.border);
+  else body.style.removeProperty('--border');
+};
 
 // In-browser image compressor to prevent LocalStorage 5MB quota overflow
 const compressImage = (file: File): Promise<string> => {
@@ -79,9 +409,10 @@ const compressImage = (file: File): Promise<string> => {
 };
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'journal' | 'calculator' | 'stats' | 'mistakes'>('journal');
+  const [activeTab, setActiveTab] = useState<'journal' | 'calculator' | 'stats' | 'mistakes' | 'settings'>('journal');
   const [trades, setTrades] = useState<Trade[]>([]);
   const [theme, setTheme] = useState<AppTheme>('dark');
+  const [accentColorId, setAccentColorId] = useState<string>('blue');
   const [themeOpen, setThemeOpen] = useState(false);
   const [editingTrade, setEditingTrade] = useState<Trade | null>(null);
   
@@ -152,24 +483,30 @@ function App() {
     reader.readAsText(file);
   };
 
-  // Sync theme with body data attributes
+  // Sync theme with body data attributes and M3 seed colors
   useEffect(() => {
-    let savedTheme = localStorage.getItem('crypto_theme_v1') as any;
-    if (savedTheme === 'colored') {
+    let savedTheme = localStorage.getItem('crypto_theme_v1') as 'light' | 'dark';
+    if (savedTheme as any === 'colored') {
       savedTheme = 'dark';
     }
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.body.setAttribute('data-theme', savedTheme);
-    } else {
-      document.body.setAttribute('data-theme', 'dark');
-    }
+    const savedAccent = localStorage.getItem('crypto_accent_v1') || 'blue';
+    
+    const activeT: AppTheme = savedTheme || 'dark';
+    setTheme(activeT);
+    setAccentColorId(savedAccent);
+    applyM3Theme(activeT, savedAccent);
   }, []);
 
   const changeTheme = (newTheme: AppTheme) => {
     setTheme(newTheme);
-    document.body.setAttribute('data-theme', newTheme);
     localStorage.setItem('crypto_theme_v1', newTheme);
+    applyM3Theme(newTheme, accentColorId);
+  };
+
+  const changeAccentColor = (newAccent: string) => {
+    setAccentColorId(newAccent);
+    localStorage.setItem('crypto_accent_v1', newAccent);
+    applyM3Theme(theme, newAccent);
   };
 
   // Load data offline from local storage
@@ -230,7 +567,6 @@ function App() {
       amount: parseFloat(form.amount),
       rrr: parseFloat(form.rrr) || 0,
       reason: form.reason,
-      direction: form.direction,
       stopLossHit: form.resultType === 'loss' ? form.stopLossHit : false,
       stopLossReason: form.resultType === 'loss' && form.stopLossHit ? form.stopLossReason : undefined,
       imageUrl: form.imageUrl || undefined
@@ -260,208 +596,76 @@ function App() {
   };
 
   return (
-    <div className="app-container">
+    <div className="app-container pb-24 md:pb-8">
       <header className="main-header select-none">
         <div className="header-inner px-6 flex items-center justify-between md:grid md:grid-cols-3">
           
-          {/* LEFT SECTION: Logo only */}
+          {/* LEFT SECTION: Logo only with M3 accent coloring */}
           <div className="flex items-center gap-4 justify-self-start relative z-50">
-            <div className="logo cursor-default">
-              <Activity className="text-blue-500 w-5 h-5 animate-pulse" />
+            <div className="logo cursor-default flex items-center gap-2">
+              <Activity className="text-[var(--accent)] w-5 h-5 animate-pulse" />
               <span className="font-sans font-extrabold tracking-tight">
-                CRYPTO<b className="text-blue-500">JOURNAL</b>
-                <span className="text-[10px] ml-2 px-2 py-0.5 bg-blue-500/10 text-blue-500 font-mono font-semibold tracking-wider rounded border border-blue-500/15 uppercase">
-                  PRO
-                </span>
+                CRYPTO<b className="text-[var(--accent)]">JOURNAL</b>
+              </span>
+              <span className="text-[10px] px-2 py-0.5 bg-[var(--accent-soft)] text-[var(--accent)] font-mono font-semibold tracking-wider rounded border border-[var(--border)] uppercase inline-flex items-center select-none">
+                PRO
               </span>
             </div>
           </div>
 
-          {/* CENTER SECTION: Navigation Segments */}
+          {/* CENTER SECTION: Material Design 3 Navigation Capsule Tabs */}
           <div className="hidden md:flex justify-self-center">
-            <div className="ios-segmented-track border-0 bg-transparent p-0">
-              <button
-                onClick={() => setActiveTab('journal')}
-                className={`ios-segment-btn ${activeTab === 'journal' ? 'active' : ''}`}
-              >
-                <BookOpen className="w-3.5 h-3.5" /> JOURNAL
-              </button>
-              <button
-                onClick={() => setActiveTab('calculator')}
-                className={`ios-segment-btn ${activeTab === 'calculator' ? 'active' : ''}`}
-              >
-                <Calculator className="w-3.5 h-3.5" /> CALCULATOR
-              </button>
-              <button
-                onClick={() => setActiveTab('stats')}
-                className={`ios-segment-btn ${activeTab === 'stats' ? 'active' : ''}`}
-              >
-                <BarChart3 className="w-3.5 h-3.5" /> STATS
-              </button>
-              <button
-                onClick={() => setActiveTab('mistakes')}
-                className={`ios-segment-btn ${activeTab === 'mistakes' ? 'active' : ''}`}
-              >
-                <ShieldAlert className="w-3.5 h-3.5" /> LESSONS
-              </button>
+            <div className="flex items-center gap-4">
+              {[
+                { id: 'journal', label: 'JOURNAL', icon: BookOpen },
+                { id: 'calculator', label: 'CALCULATOR', icon: Calculator },
+                { id: 'stats', label: 'STATS', icon: BarChart3 },
+                { id: 'mistakes', label: 'LESSONS', icon: ShieldAlert },
+                { id: 'settings', label: 'SETTINGS', icon: Settings },
+              ].map(tab => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id as any)}
+                    className="relative flex flex-col items-center gap-1 group px-2.5 py-1 cursor-pointer outline-none active:scale-95 transition-transform"
+                  >
+                    {/* Active Pill Indicator */}
+                    <div className="relative w-16 h-8 flex items-center justify-center rounded-full overflow-hidden transition-all duration-300">
+                      {isActive && (
+                        <motion.div
+                          layoutId="m3-active-pill"
+                          className="absolute inset-0 bg-[var(--accent-soft)]"
+                          transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                      <Icon className={`w-5 h-5 transition-colors relative z-10 ${isActive ? 'text-[var(--accent)] font-bold' : 'text-[var(--text-dim)] group-hover:text-[var(--text)]'}`} />
+                    </div>
+                    {/* Label */}
+                    <span className={`text-[10px] font-bold tracking-widest transition-colors select-none ${isActive ? 'text-[var(--text)] font-extrabold' : 'text-[var(--text-dim)] group-hover:text-[var(--text)]'}`}>
+                      {tab.label}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* RIGHT SECTION: Theme Selector & Backup Tools */}
-          <div className="flex items-center gap-3.5 justify-self-end relative z-100">
-            
-            {/* Backup / Export / Import Settings Menu */}
-            <div className="relative">
-              <button
-                onClick={() => { setDataMenuOpen(!dataMenuOpen); setThemeOpen(false); }}
-                className="h-9 w-9 xl:px-3.5 xl:w-auto rounded-xl bg-[var(--segment-bg)] border border-[var(--border)] flex items-center justify-center gap-2 cursor-pointer text-[var(--text)] hover:border-[var(--accent)] hover:bg-[var(--card-bg)] shadow-sm active:scale-95 transition-all text-xs font-semibold"
-                title="Data Import/Export Backup"
-              >
-                <Database className="w-4 h-4 text-blue-500" />
-                <span className="font-mono text-[10px] uppercase tracking-wider hidden xl:inline">
-                  Export / Import
-                </span>
-              </button>
-
-              <AnimatePresence>
-                {dataMenuOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setDataMenuOpen(false)} />
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95, y: 6 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, y: 6 }}
-                      transition={{ type: "spring", stiffness: 450, damping: 28 }}
-                      className="absolute right-0 mt-2 p-2 bg-[var(--card-bg)] border border-[var(--border)] rounded-xl shadow-2xl z-50 flex flex-col gap-1.5 min-w-[200px]"
-                    >
-                      <div className="px-2.5 py-1 text-[10px] font-bold text-[var(--text-dim)] uppercase tracking-widest font-mono border-b border-[var(--border)] pb-1.5 mb-1 select-none">
-                        Data Management
-                      </div>
-                      
-                      <button 
-                        onClick={() => { exportTrades(); setDataMenuOpen(false); }} 
-                        className="w-full text-left px-2.5 py-2 rounded-lg text-[11px] font-semibold flex items-center gap-2.5 text-[var(--text-dim)] hover:text-[var(--text)] hover:bg-[var(--segment-bg)] active:scale-95 transition-all"
-                      >
-                        <Download className="w-4 h-4 text-emerald-500" />
-                        <span>Export Backup (JSON)</span>
-                      </button>
-
-                      <label 
-                        className="w-full text-left px-2.5 py-2 rounded-lg text-[11px] font-semibold flex items-center gap-2.5 text-[var(--text-dim)] hover:text-[var(--text)] hover:bg-[var(--segment-bg)] cursor-pointer active:scale-95 transition-all"
-                      >
-                        <UploadCloud className="w-4 h-4 text-amber-500" />
-                        <span>Import Backup (JSON)</span>
-                        <input 
-                          type="file" 
-                          accept=".json" 
-                          onChange={(e) => { importTrades(e); setDataMenuOpen(false); }} 
-                          className="hidden" 
-                        />
-                      </label>
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="relative">
-              <button
-                onClick={() => { setThemeOpen(!themeOpen); setDataMenuOpen(false); }}
-                className="h-9 px-3.5 rounded-xl bg-[var(--segment-bg)] border border-[var(--border)] flex items-center gap-2 cursor-pointer text-[var(--text)] hover:border-[var(--accent)] hover:bg-[var(--card-bg)] shadow-sm active:scale-95 transition-all text-xs font-semibold"
-                title="Change Theme"
-              >
-                {theme === 'light' && <Sun className="w-4 h-4 text-amber-500" />}
-                {theme === 'dark' && <Moon className="w-4 h-4 text-blue-400" />}
-                <span className="font-mono text-[10px] uppercase tracking-wider hidden sm:inline">
-                  {theme === 'light' && 'Cream/Light'}
-                  {theme === 'dark' && 'Zinc/Dark'}
-                </span>
-                <ChevronDown className="w-3 h-3 text-[var(--text-dim)]" />
-              </button>
-
-              <AnimatePresence>
-                {themeOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setThemeOpen(false)} />
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95, y: 6 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, y: 6 }}
-                      transition={{ type: "spring", stiffness: 450, damping: 28 }}
-                      className="absolute right-0 mt-2 p-1.5 bg-[var(--card-bg)] border border-[var(--border)] rounded-xl shadow-2xl z-50 flex flex-col gap-1 min-w-[150px]"
-                    >
-                      <button 
-                        onClick={() => { changeTheme('light'); setThemeOpen(false); }} 
-                        className={`w-full text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold flex items-center gap-2 transition-all ${
-                          theme === 'light' 
-                            ? 'bg-[var(--segment-selected)] text-[var(--segment-selected-text)] border border-[var(--border)] shadow-sm' 
-                            : 'text-[var(--text-dim)] hover:text-[var(--text)] hover:bg-[var(--segment-bg)]'
-                        }`}
-                      >
-                        <Sun className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-amber-500' : 'text-zinc-400'}`} />
-                        <span>Cream Light</span>
-                        {theme === 'light' && <Check className="w-3 h-3 ml-auto text-blue-500" />}
-                      </button>
-
-                      <button 
-                        onClick={() => { changeTheme('dark'); setThemeOpen(false); }} 
-                        className={`w-full text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold flex items-center gap-2 transition-all ${
-                          theme === 'dark' 
-                            ? 'bg-[var(--segment-selected)] text-[var(--segment-selected-text)] border border-[var(--border)] shadow-sm' 
-                            : 'text-[var(--text-dim)] hover:text-[var(--text)] hover:bg-[var(--segment-bg)]'
-                        }`}
-                      >
-                        <Moon className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-blue-400' : 'text-zinc-400'}`} />
-                        <span>Midnight Dark</span>
-                        {theme === 'dark' && <Check className="w-3 h-3 ml-auto text-blue-500" />}
-                      </button>
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
-            </div>
+          {/* RIGHT SECTION: Empty to preserve grid layout */}
+          <div className="flex items-center gap-3.5 justify-self-end relative">
           </div>
 
         </div>
       </header>
 
-      {/* iOS Segmented Bar for smaller viewport bounds */}
-      <div className="md:hidden sticky top-[72px] z-[90] p-3 border-b border-[var(--border)] backdrop-blur bg-[var(--header-bg)] flex justify-center">
-        <div className="ios-segmented-track w-full max-w-md">
-          <button
-            onClick={() => setActiveTab('journal')}
-            className={`ios-segment-btn ${activeTab === 'journal' ? 'active' : ''}`}
-          >
-            JOURNAL
-          </button>
-          <button
-            onClick={() => setActiveTab('calculator')}
-            className={`ios-segment-btn ${activeTab === 'calculator' ? 'active' : ''}`}
-          >
-            CALCULATOR
-          </button>
-          <button
-            onClick={() => setActiveTab('stats')}
-            className={`ios-segment-btn ${activeTab === 'stats' ? 'active' : ''}`}
-          >
-            STATS
-          </button>
-          <button
-            onClick={() => setActiveTab('mistakes')}
-            className={`ios-segment-btn ${activeTab === 'mistakes' ? 'active' : ''}`}
-          >
-            LESSONS
-          </button>
-        </div>
-      </div>
+      {/* No more top segments in index.tsx because we now use bottom navigation on mobile */}
 
       <main className="dashboard-grid">
         {/* Left column statistics list */}
         <section className={`stats-panel mb-4 lg:mb-0 ${activeTab !== 'journal' ? 'hide-stats-on-mobile' : ''}`}>
-          <div className="panel-title font-mono text-[10px] tracking-widest text-zinc-500 mb-1 select-none">
-            OFFLINE JOURNAL ENGINES
-          </div>
-          
+
           <div className="stats-cards">
             <StatItem label="Daily Profits / Losses" value={stats.daily} />
             <StatItem label="Rolling 3-Day Performance" value={stats.threeDay} />
@@ -482,31 +686,6 @@ function App() {
                   <h2 className="text-sm font-extrabold tracking-wider uppercase text-[var(--text)] flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-teal-400" /> LOG TRADE MANUALLY
                   </h2>
-                  
-                  <div className="flex bg-[var(--segment-bg)] p-1 rounded-xl border border-[var(--border)] text-[10px] font-mono">
-                    <button
-                      type="button"
-                      onClick={() => setForm({ ...form, direction: 'long' })}
-                      className={`px-3 py-1 rounded-lg font-semibold flex items-center gap-1 ${
-                        form.direction === 'long' 
-                          ? 'bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/20' 
-                          : 'text-[var(--text-dim)] hover:text-[var(--text)]'
-                      }`}
-                    >
-                      <TrendingUp className="w-3 h-3" /> LONG
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setForm({ ...form, direction: 'short' })}
-                      className={`px-3 py-1 rounded-lg font-semibold flex items-center gap-1 ${
-                        form.direction === 'short' 
-                          ? 'bg-[#f43f5e]/15 text-[#f43f5e] border border-[#f43f5e]/20' 
-                          : 'text-[var(--text-dim)] hover:text-[var(--text)] font-medium'
-                      }`}
-                    >
-                      <TrendingDown className="w-3 h-3" /> SHORT
-                    </button>
-                  </div>
                 </div>
 
                 <form onSubmit={handleAddTrade} className="trade-form flex flex-col gap-5">
@@ -591,7 +770,7 @@ function App() {
                         htmlFor="form-image-attachment" 
                         className="flex items-center gap-2 px-4 py-2.5 hover:bg-[var(--segment-bg)] border-2 border-[var(--border)] hover:border-[var(--accent)] rounded-xl cursor-pointer text-xs text-[var(--text)] bg-[var(--input-bg)] font-bold transition-all shadow"
                       >
-                        <UploadCloud className="w-4 h-4 text-blue-400" />
+                        <Upload className="w-4 h-4 text-blue-400" />
                         {form.imageUrl ? 'Change Snapshot' : 'Attach Technical Chart Image'}
                       </label>
                     </div>
@@ -638,13 +817,15 @@ function App() {
                           <div className="trade-info">
                             <div className="flex items-center gap-2">
                               <span className="pair font-extrabold text-sm md:text-base text-[var(--text)]">{trade.pair}</span>
-                              <span className={`text-[9px] px-1.5 py-0.5 font-bold tracking-tight rounded select-none ${
-                                trade.direction === 'short' 
-                                  ? 'bg-rose-500/15 text-rose-500 border-2 border-rose-500/20' 
-                                  : 'bg-emerald-500/15 text-emerald-500 border-2 border-emerald-500/20'
-                              }`}>
-                                {trade.direction?.toUpperCase() || 'LONG'}
-                              </span>
+                              {trade.direction && (
+                                <span className={`text-[9px] px-1.5 py-0.5 font-bold tracking-tight rounded select-none ${
+                                  trade.direction === 'short' 
+                                    ? 'bg-rose-500/15 text-rose-500 border-2 border-rose-500/20' 
+                                    : 'bg-emerald-500/15 text-emerald-500 border-2 border-emerald-500/20'
+                                }`}>
+                                  {trade.direction.toUpperCase()}
+                                </span>
+                              )}
                             </div>
                             <span className="date font-mono text-[10px] text-[var(--text-dim)] mt-1">{new Date(trade.timestamp).toLocaleString()}</span>
                           </div>
@@ -738,6 +919,19 @@ function App() {
             <StopLossMistakes trades={trades} />
           )}
 
+          {activeTab === 'settings' && (
+            <SettingsTab
+              theme={theme}
+              accentColorId={accentColorId}
+              onThemeChange={changeTheme}
+              onAccentColorChange={changeAccentColor}
+              onExport={exportTrades}
+              onImport={importTrades}
+              dataMessage={dataMessage}
+              tradesCount={trades.length}
+            />
+          )}
+
         </div>
       </main>
 
@@ -776,7 +970,7 @@ function App() {
               className="flex flex-col gap-4 text-left"
             >
               {/* Row 1: Pair and Direction */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className={editingTrade.direction ? "grid grid-cols-1 sm:grid-cols-2 gap-4" : "grid grid-cols-1 gap-4"}>
                 <div className="field flex flex-col gap-1 text-xs">
                   <label className="text-[10px] font-bold text-[var(--text-dim)] uppercase tracking-wider">Pair / Symbol</label>
                   <input 
@@ -787,17 +981,19 @@ function App() {
                     required 
                   />
                 </div>
-                <div className="field flex flex-col gap-1 text-xs">
-                  <label className="text-[10px] font-bold text-[var(--text-dim)] uppercase tracking-wider">Direction</label>
-                  <select 
-                    value={editingTrade.direction || 'long'} 
-                    onChange={e => setEditingTrade({ ...editingTrade, direction: e.target.value as 'long' | 'short' })}
-                    className="bg-[var(--input-bg)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs text-[var(--text)] outline-none focus:border-[var(--accent)] transition-all"
-                  >
-                    <option value="long">Long</option>
-                    <option value="short">Short</option>
-                  </select>
-                </div>
+                {editingTrade.direction && (
+                  <div className="field flex flex-col gap-1 text-xs">
+                    <label className="text-[10px] font-bold text-[var(--text-dim)] uppercase tracking-wider">Direction</label>
+                    <select 
+                      value={editingTrade.direction} 
+                      onChange={e => setEditingTrade({ ...editingTrade, direction: e.target.value as 'long' | 'short' })}
+                      className="bg-[var(--input-bg)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs text-[var(--text)] outline-none focus:border-[var(--accent)] transition-all"
+                    >
+                      <option value="long">Long</option>
+                      <option value="short">Short</option>
+                    </select>
+                  </div>
+                )}
               </div>
 
               {/* Row 2: Date & Time, Result Type */}
@@ -942,7 +1138,7 @@ function App() {
                     htmlFor="edit-image-attachment" 
                     className="flex items-center gap-2 px-4 py-2 hover:bg-[var(--segment-bg)] border-2 border-[var(--border)] hover:border-[var(--accent)] rounded-xl cursor-pointer text-[11px] text-[var(--text)] bg-[var(--input-bg)] font-bold transition-all shadow"
                   >
-                    <UploadCloud className="w-4 h-4 text-blue-400" />
+                    <Upload className="w-4 h-4 text-blue-400" />
                     {editingTrade.imageUrl ? 'Change Photo' : 'Upload Technical Photo'}
                   </label>
 
@@ -1031,6 +1227,44 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* Mobile Bottom Navigation Bar (Google Material Design 3 Spec) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-[999] border-t border-[var(--border)] bg-[var(--header-bg)] backdrop-blur-xl pb-safe shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex justify-around items-center h-[76px] px-2 select-none">
+        {[
+          { id: 'journal', label: 'Journal', icon: BookOpen },
+          { id: 'calculator', label: 'Calculator', icon: Calculator },
+          { id: 'stats', label: 'Stats', icon: BarChart3 },
+          { id: 'mistakes', label: 'Lessons', icon: ShieldAlert },
+          { id: 'settings', label: 'Settings', icon: Settings },
+        ].map(tab => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id as any)}
+              className="flex-1 flex flex-col items-center justify-center gap-1 py-1 cursor-pointer outline-none relative active:scale-95 transition-transform"
+            >
+              {/* Active Pill Indicator */}
+              <div className="relative w-14 h-8 flex items-center justify-center rounded-full overflow-hidden transition-all duration-200">
+                {isActive && (
+                  <motion.div
+                    layoutId="m3-active-pill-mobile"
+                    className="absolute inset-0 bg-[var(--accent-soft)]"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <Icon className={`w-5.5 h-5.5 transition-colors relative z-10 ${isActive ? 'text-[var(--accent)] font-bold' : 'text-[var(--text-dim)]'}`} />
+              </div>
+              {/* Label */}
+              <span className={`text-[10px] font-bold tracking-wider transition-colors select-none ${isActive ? 'text-[var(--text)] font-extrabold' : 'text-[var(--text-dim)]'}`}>
+                {tab.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -210,12 +210,12 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Left Side: Inputs */}
         <div className="flex flex-col gap-4">
-          <div className="flex p-0.5 rounded-lg border border-[var(--border)] bg-[var(--input-bg)]">
+          <div className="flex p-1 rounded-full border border-[var(--border)] bg-[var(--input-bg)] select-none">
             <button
               type="button"
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-2 text-xs font-bold rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 outline-none ${
                 direction === 'long'
-                  ? 'bg-[var(--segment-selected)] text-[var(--text)] shadow-sm'
+                  ? 'bg-[var(--segment-selected)] text-[var(--segment-selected-text)] shadow-sm font-extrabold'
                   : 'hover:text-[var(--text)] text-[var(--text-dim)]'
               }`}
               onClick={() => setDirection('long')}
@@ -224,9 +224,9 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
             </button>
             <button
               type="button"
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-2 text-xs font-bold rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 outline-none ${
                 direction === 'short'
-                  ? 'bg-[var(--segment-selected)] text-[var(--text)] shadow-sm'
+                  ? 'bg-[var(--segment-selected)] text-[var(--segment-selected-text)] shadow-sm font-extrabold'
                   : 'hover:text-[var(--text)] text-[var(--text-dim)]'
               }`}
               onClick={() => setDirection('short')}
@@ -308,7 +308,7 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
             </span>
             <button
               type="button"
-              className="flex items-center gap-1 px-2 py-1 text-[10px] font-bold bg-[var(--accent-soft)] hover:bg-[var(--accent)] text-[var(--accent)] hover:text-white rounded-lg transition-all border border-[var(--border)] active:scale-95 shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-extrabold bg-[var(--accent-soft)] hover:bg-[var(--accent)] text-[var(--accent)] hover:text-[var(--button-primary-text)] rounded-full transition-all border border-[var(--border)] active:scale-95 shadow-sm cursor-pointer"
               onClick={handleAddTarget}
             >
               <Plus className="w-3.5 h-3.5" /> ADD TARGET
@@ -423,8 +423,7 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
         <div className="quick-journal-actions">
           <button
             type="button"
-            className="flex-1 py-2.5 text-white shadow-sm font-semibold rounded-lg text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 hover:opacity-90 active:scale-95 duration-150"
-            style={{ background: 'var(--gain)' }}
+            className="flex-1 py-2.5 text-white shadow-sm font-extrabold rounded-lg text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 bg-[#10b981] hover:bg-[#059669] active:scale-95 disabled:bg-[var(--border)] disabled:text-[var(--text-dim)] disabled:opacity-40 disabled:cursor-not-allowed duration-150"
             onClick={() => handleCreateTrade('gain')}
             disabled={!(entry > 0 && marg > 0)}
           >
@@ -432,8 +431,7 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
           </button>
           <button
             type="button"
-            className="flex-1 py-2.5 text-white shadow-sm font-semibold rounded-lg text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 hover:opacity-90 active:scale-95 duration-150"
-            style={{ background: 'var(--loss)' }}
+            className="flex-1 py-2.5 text-white shadow-sm font-extrabold rounded-lg text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 bg-[#f43f5e] hover:bg-[#e11d48] active:scale-95 disabled:bg-[var(--border)] disabled:text-[var(--text-dim)] disabled:opacity-40 disabled:cursor-not-allowed duration-150"
             onClick={() => handleCreateTrade('loss')}
             disabled={!(entry > 0 && marg > 0)}
           >

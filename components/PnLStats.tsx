@@ -232,64 +232,45 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
       <section className="card p-5 flex flex-col gap-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4" style={{ borderColor: 'var(--border)' }}>
           <div className="flex items-center gap-3">
-            <BarChart3 className="text-blue-500 w-5 h-5" />
+            <BarChart3 className="text-[var(--accent)] w-5 h-5" />
             <div>
-              <h2 className="text-base font-extrabold tracking-tight">PnL CALCULATIONS & PERFORMANCE STATS</h2>
+              <h2 className="text-base font-extrabold tracking-tight uppercase">PnL Calculations & Performance Stats</h2>
               <p className="text-xs text-[var(--text-dim)]">Inspect win rates, profit factors, averages, and detailed offline journal analytics.</p>
             </div>
           </div>
 
-          {/* Quick ranges */}
-          <div className="ios-segmented-track max-w-lg flex shrink-0">
-            <button 
-              onClick={() => setRangeOption('1d')} 
-              className={`ios-segment-btn ${rangeOption === '1d' ? 'active' : ''}`}
-            >
-              1D
-            </button>
-            <button 
-              onClick={() => setRangeOption('3d')} 
-              className={`ios-segment-btn ${rangeOption === '3d' ? 'active' : ''}`}
-            >
-              3D
-            </button>
-            <button 
-              onClick={() => setRangeOption('7d')} 
-              className={`ios-segment-btn ${rangeOption === '7d' ? 'active' : ''}`}
-            >
-              7D
-            </button>
-            <button 
-              onClick={() => setRangeOption('2w')} 
-              className={`ios-segment-btn ${rangeOption === '2w' ? 'active' : ''}`}
-            >
-              2W
-            </button>
-            <button 
-              onClick={() => setRangeOption('1m')} 
-              className={`ios-segment-btn ${rangeOption === '1m' ? 'active' : ''}`}
-            >
-              1M
-            </button>
-            <button 
-              onClick={() => setRangeOption('custom')} 
-              className={`ios-segment-btn ${rangeOption === 'custom' ? 'active' : ''}`}
-            >
-              Custom
-            </button>
+          {/* Quick ranges with Material Design 3 Filter Chips style */}
+          <div className="flex flex-wrap gap-2 shrink-0 select-none">
+            {(['1d', '3d', '7d', '2w', '1m', 'custom'] as RangeOption[]).map(option => {
+              const isActive = rangeOption === option;
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setRangeOption(option)}
+                  className={`relative px-4 py-1.5 text-[10px] font-bold rounded-full border transition-all cursor-pointer outline-none select-none flex items-center justify-center active:scale-95 ${
+                    isActive
+                      ? 'bg-[var(--accent)] text-[var(--button-primary-text)] border-[var(--accent)] shadow-sm'
+                      : 'bg-[var(--input-bg)] text-[var(--text-dim)] border-[var(--border)] hover:text-[var(--text)] hover:border-[var(--text-dim)]'
+                  }`}
+                >
+                  <span className="relative z-10 uppercase tracking-widest">{option}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Date picking input row for Custom mode */}
         {rangeOption === 'custom' && (
-          <div className="p-3.5 rounded-xl border border-[var(--border)] bg-[var(--input-bg)] grid grid-cols-2 gap-4">
+          <div className="p-3.5 rounded-2xl border border-[var(--border)] bg-[var(--input-bg)] grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-bold text-[var(--text-dim)] uppercase tracking-wider">Start Date</label>
               <input 
                 type="date" 
                 value={customStartDate} 
                 onChange={e => setCustomStartDate(e.target.value)} 
-                className="w-full text-xs font-mono py-1.5 px-2.5 rounded-lg border border-[var(--border)] focus:border-[var(--accent)]"
+                className="w-full text-xs font-mono py-1.5 px-2.5 rounded-xl border border-[var(--border)] focus:border-[var(--accent)] outline-none"
                 style={{ background: 'var(--card-bg)', color: 'var(--text)' }}
               />
             </div>
@@ -299,7 +280,7 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
                 type="date" 
                 value={customEndDate} 
                 onChange={e => setCustomEndDate(e.target.value)} 
-                className="w-full text-xs font-mono py-1.5 px-2.5 rounded-lg border border-[var(--border)] focus:border-[var(--accent)]"
+                className="w-full text-xs font-mono py-1.5 px-2.5 rounded-xl border border-[var(--border)] focus:border-[var(--accent)] outline-none"
                 style={{ background: 'var(--card-bg)', color: 'var(--text)' }}
               />
             </div>
@@ -309,7 +290,7 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
         {/* Grid Stats Deck */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           
-          <div className="p-4 rounded-xl border-2 border-[var(--border)] flex flex-col gap-1 bg-[var(--accent-soft)]">
+          <div className="p-4 rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] shadow-[var(--card-shadow)] flex flex-col gap-1 transition-all hover:border-[var(--accent)]">
             <span className="text-[9px] font-bold tracking-widest text-[var(--text-dim)] uppercase flex items-center gap-1">
               <FileSpreadsheet className="w-3.5 h-3.5 text-blue-400" /> Net Profit/Loss
             </span>
@@ -321,19 +302,19 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
             </span>
           </div>
 
-          <div className="p-4 rounded-xl border-2 border-[var(--border)] flex flex-col gap-1 bg-[var(--accent-soft)]">
+          <div className="p-4 rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] shadow-[var(--card-shadow)] flex flex-col gap-1 transition-all hover:border-[var(--accent)]">
             <span className="text-[9px] font-bold tracking-widest text-[var(--text-dim)] uppercase flex items-center gap-1">
               <Percent className="w-3.5 h-3.5 text-teal-400" /> Win Rate Ratio
             </span>
             <motion.span className="text-xl font-black font-mono leading-none mt-1 text-[var(--text)]">
               {computedStats.winRate.toFixed(1)}%
             </motion.span>
-            <div className="w-full h-1 bg-zinc-800 rounded-full overflow-hidden mt-2">
+            <div className="w-full h-1 bg-[var(--border)] rounded-full overflow-hidden mt-2">
               <div className="h-full bg-teal-400" style={{ width: `${computedStats.winRate}%` }} />
             </div>
           </div>
 
-          <div className="p-4 rounded-xl border-2 border-[var(--border)] flex flex-col gap-1 bg-[var(--accent-soft)]">
+          <div className="p-4 rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] shadow-[var(--card-shadow)] flex flex-col gap-1 transition-all hover:border-[var(--accent)]">
             <span className="text-[9px] font-bold tracking-widest text-[var(--text-dim)] uppercase flex items-center gap-1">
               <Target className="w-3.5 h-3.5 text-indigo-400" /> Avg. profit / Trade
             </span>
@@ -345,7 +326,7 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
             </span>
           </div>
 
-          <div className="p-4 rounded-xl border-2 border-[var(--border)] flex flex-col gap-1 bg-[var(--accent-soft)]">
+          <div className="p-4 rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] shadow-[var(--card-shadow)] flex flex-col gap-1 transition-all hover:border-[var(--accent)]">
             <span className="text-[9px] font-bold tracking-widest text-[var(--text-dim)] uppercase flex items-center gap-1">
               <Activity className="w-3.5 h-3.5 text-amber-400" /> Profit Factor
             </span>
@@ -545,9 +526,11 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
                     <div>
                       <div className="flex items-center gap-1.5">
                         <span className="font-extrabold text-xs text-[var(--text)]">{trade.pair}</span>
-                        <span className={`text-[8px] px-1 rounded font-bold uppercase ${trade.direction === 'short' ? 'bg-rose-500/10 text-rose-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
-                          {trade.direction || 'LONG'}
-                        </span>
+                        {trade.direction && (
+                          <span className={`text-[8px] px-1 rounded font-bold uppercase ${trade.direction === 'short' ? 'bg-rose-500/10 text-rose-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                            {trade.direction}
+                          </span>
+                        )}
                       </div>
                       <span className="text-[9px] font-mono text-[var(--text-dim)] mt-0.5 block">
                         {new Date(trade.timestamp).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
