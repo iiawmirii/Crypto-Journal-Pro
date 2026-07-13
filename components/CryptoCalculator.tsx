@@ -208,11 +208,13 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
           <div className="flex p-1 rounded-full border border-[var(--border)] bg-[var(--input-bg)] select-none">
               <button
                 onClick={() => setDirection('long')}
+                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-extrabold transition-all ${direction === 'long' ? 'bg-[var(--accent)] text-[var(--button-primary-text)]' : 'text-[var(--text-dim)] hover:text-[var(--text)]'}`}
             >
               <TrendingUp className="w-3.5 h-3.5 text-emerald-500" /> LONG POSITION
             </button>
               <button
                 onClick={() => setDirection('short')}
+                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-extrabold transition-all ${direction === 'short' ? 'bg-[var(--accent)] text-[var(--button-primary-text)]' : 'text-[var(--text-dim)] hover:text-[var(--text)]'}`}
             >
               <TrendingDown className="w-3.5 h-3.5 text-rose-500" /> SHORT POSITION
             </button>
