@@ -58,26 +58,25 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
         <div className="flex items-center gap-3 border-b pb-4" style={{ borderColor: 'var(--border)' }}>
           <Settings className="text-[var(--accent)] w-5 h-5 animate-[spin_8s_linear_infinite]" />
           <div>
-            <h2 className="text-base font-extrabold tracking-tight uppercase">App Settings & Customization</h2>
-            <p className="text-xs text-[var(--text-dim)]">Configure the offline backup sync engines and personalize your interface theme.</p>
+            <h2 className="text-base font-extrabold tracking-tight uppercase">Settings</h2>
+            <p className="text-xs text-[var(--text-dim)]">Customize your theme and manage backups.</p>
           </div>
         </div>
 
         {/* Section 1: Themes & M3 Accent Colors */}
         <div className="flex flex-col gap-5">
           <h3 className="text-xs font-black tracking-widest text-[var(--text-dim)] uppercase flex items-center gap-2">
-            <span>01 / Interface Theme Profile</span>
+            <span>Theme</span>
           </h3>
 
           <div className={`grid grid-cols-1 ${theme === 'amoled' ? 'md:grid-cols-1' : 'md:grid-cols-2'} gap-6`}>
             {/* Theme Mode Segmented Pickers */}
             <div className="flex flex-col gap-3">
               <label className="text-[11px] font-bold text-[var(--text-dim)] uppercase tracking-wider">
-                Base Theme Category
+                Mode
               </label>
               <div className="flex p-1 rounded-full border border-[var(--border)] bg-[var(--input-bg)] w-full">
                 <button
-                  type="button"
                   onClick={() => onThemeChange('light')}
                   className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer outline-none active:scale-95 ${
                     theme === 'light'
@@ -91,7 +90,6 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
                   {theme === 'light' && <Check className="w-3.5 h-3.5 shrink-0 ml-1" />}
                 </button>
                 <button
-                  type="button"
                   onClick={() => onThemeChange('dark')}
                   className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer outline-none active:scale-95 ${
                     theme === 'dark'
@@ -105,7 +103,6 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
                   {theme === 'dark' && <Check className="w-3.5 h-3.5 shrink-0 ml-1" />}
                 </button>
                 <button
-                  type="button"
                   onClick={() => onThemeChange('amoled')}
                   className={`flex-1 py-2.5 text-[10px] sm:text-xs font-bold rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer outline-none active:scale-95 ${
                     theme === 'amoled'
@@ -120,9 +117,9 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
                 </button>
               </div>
               <p className="text-[10px] text-[var(--text-dim)] leading-relaxed">
-                {theme === 'amoled' 
-                  ? 'Active Mode: Pure high-contrast pitch-black AMOLED interface. Designed for optimal power-saving on OLED displays with modern neon accents.' 
-                  : 'Applies elegant background surface tones. Background colors adapt beautifully to the selected M3 seed color accent.'}
+                {theme === 'amoled'
+                  ? 'Pure black AMOLED theme with neon accents.'
+                  : 'Background adapts to the selected accent color.'}
               </p>
             </div>
 
@@ -130,7 +127,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
             {theme !== 'amoled' && (
               <div className="flex flex-col gap-3">
                 <label className="text-[11px] font-bold text-[var(--text-dim)] uppercase tracking-wider">
-                  M3 Seed Color Accents
+                  Accent Color
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[160px] overflow-y-auto pr-1">
                   {M3_PALETTES.map((p) => {
@@ -138,7 +135,6 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
                     return (
                       <button
                         key={p.id}
-                        type="button"
                         onClick={() => onAccentColorChange(p.id)}
                         className={`relative flex items-center gap-2.5 p-2 px-3 rounded-xl border transition-all cursor-pointer outline-none active:scale-95 ${
                           isSelected
@@ -163,7 +159,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
                   })}
                 </div>
                 <p className="text-[10px] text-[var(--text-dim)] leading-relaxed">
-                  Dynamically sets the primary branding accents across buttons, active tabs, inputs, and indicators using genuine Google Material Design 3 seed tones.
+                  Sets the accent color for the interface.
                 </p>
               </div>
             )}
@@ -175,7 +171,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
         {/* Section 2: JSON Offline Backups */}
         <div className="flex flex-col gap-5">
           <h3 className="text-xs font-black tracking-widest text-[var(--text-dim)] uppercase flex items-center gap-2">
-            <span>02 / Data Portability & Offline Sync</span>
+            <span>Data</span>
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -184,12 +180,12 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
               <div className="p-4 rounded-2xl bg-[var(--input-bg)] border border-[var(--border)] flex gap-3">
                 <HardDrive className="w-5 h-5 text-[var(--accent)] shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-1">
-                  <span className="text-xs font-bold text-[var(--text)]">Offline Storage Node</span>
+                  <span className="text-xs font-bold text-[var(--text)]">Local Storage</span>
                   <span className="text-[10px] text-[var(--text-dim)] leading-relaxed">
-                    All of your logs and calculations are saved inside your device's offline LocalStorage. Nothing is sent to external servers. Your privacy is fully preserved.
+                    All data is stored locally. Nothing is sent to servers.
                   </span>
                   <div className="mt-2 text-[10px] font-mono font-semibold text-[var(--accent)] bg-[var(--accent-soft)] px-2.5 py-1 rounded-lg w-max border border-[var(--border)]">
-                    {tradesCount} JOURNAL ENTRIES COMMITTED
+                    {tradesCount} entries saved
                   </div>
                 </div>
               </div>
@@ -219,7 +215,6 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
               <div className="flex flex-col sm:flex-row gap-3">
                 {/* Export Button */}
                 <button
-                  type="button"
                   onClick={onExport}
                   className="flex-1 px-5 py-3 rounded-2xl bg-[var(--accent)] text-[var(--button-primary-text)] font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:opacity-90 active:scale-95 transition-all outline-none"
                 >

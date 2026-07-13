@@ -1,8 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactDOM from 'react-dom/client';
@@ -330,7 +325,6 @@ const applyM3Theme = (themeCategory: 'light' | 'dark' | 'amoled', colorId: strin
   const body = document.body;
   
   if (themeCategory === 'amoled') {
-    // In AMOLED, clean out style overrides so CSS stylesheet's base AMOLED variables take effect directly
     body.style.removeProperty('--accent');
     body.style.removeProperty('--accent-soft');
     body.style.removeProperty('--accent-glow');
@@ -348,7 +342,6 @@ const applyM3Theme = (themeCategory: 'light' | 'dark' | 'amoled', colorId: strin
   const palette = PALETTES.find(p => p.id === colorId) || PALETTES[0];
   const target = themeCategory === 'light' ? palette.light : palette.dark;
   
-  // Set properties on document.body as inline styles to override specific body[data-theme] classes in external stylesheet
   body.style.setProperty('--accent', target.accent);
   body.style.setProperty('--accent-soft', target.accentSoft);
   body.style.setProperty('--accent-glow', target.accentGlow);
@@ -370,7 +363,6 @@ const applyM3Theme = (themeCategory: 'light' | 'dark' | 'amoled', colorId: strin
   else body.style.removeProperty('--border');
 };
 
-// In-browser image compressor to prevent LocalStorage 5MB quota overflow
 const compressImage = (file: File): Promise<string> => {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -408,15 +400,21 @@ const compressImage = (file: File): Promise<string> => {
   });
 };
 
+const TABS = [
+  { id: 'journal' as const, label: 'Journal', icon: BookOpen },
+  { id: 'calculator' as const, label: 'Calculator', icon: Calculator },
+  { id: 'stats' as const, label: 'Stats', icon: BarChart3 },
+  { id: 'mistakes' as const, label: 'Lessons', icon: ShieldAlert },
+  { id: 'settings' as const, label: 'Settings', icon: Settings },
+];
+
 function App() {
   const [activeTab, setActiveTab] = useState<'journal' | 'calculator' | 'stats' | 'mistakes' | 'settings'>('journal');
   const [trades, setTrades] = useState<Trade[]>([]);
   const [theme, setTheme] = useState<AppTheme>('dark');
   const [accentColorId, setAccentColorId] = useState<string>('blue');
-  const [themeOpen, setThemeOpen] = useState(false);
   const [editingTrade, setEditingTrade] = useState<Trade | null>(null);
   
-  // Form State
   const [form, setForm] = useState({
     pair: '',
     time: new Date().toISOString().slice(0, 16),
@@ -432,8 +430,6 @@ function App() {
 
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
-  // Backup & Import/Export LocalStates and Functions
-  const [dataMenuOpen, setDataMenuOpen] = useState(false);
   const [dataMessage, setDataMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   const exportTrades = () => {
@@ -455,6 +451,17 @@ function App() {
     }
   };
 
+  const isValidTrade = (item: any): item is Trade => (
+    item && typeof item === 'object' &&
+    typeof item.id === 'string' &&
+    typeof item.pair === 'string' &&
+    typeof item.timestamp === 'number' && item.timestamp > 0 &&
+    (item.resultType === 'gain' || item.resultType === 'loss') &&
+    typeof item.amount === 'number' && item.amount >= 0 &&
+    typeof item.rrr === 'number' &&
+    typeof item.reason === 'string'
+  );
+
   const importTrades = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -464,7 +471,7 @@ function App() {
       try {
         const parsed = JSON.parse(event.target?.result as string);
         if (Array.isArray(parsed)) {
-          const isValid = parsed.every((item: any) => item && typeof item === 'object' && 'id' in item && 'pair' in item);
+          const isValid = parsed.every(isValidTrade);
           if (isValid || parsed.length === 0) {
             saveTrades(parsed);
             setDataMessage({ text: `Successfully backup-restored ${parsed.length} trades!`, type: 'success' });
@@ -483,7 +490,6 @@ function App() {
     reader.readAsText(file);
   };
 
-  // Sync theme with body data attributes and M3 seed colors
   useEffect(() => {
     let savedTheme = localStorage.getItem('crypto_theme_v1') as 'light' | 'dark';
     if (savedTheme as any === 'colored') {
@@ -509,26 +515,25 @@ function App() {
     applyM3Theme(theme, newAccent);
   };
 
-  // Load data offline from local storage
   useEffect(() => {
     const savedTrades = localStorage.getItem('crypto_trades_v1');
     if (savedTrades) {
       try {
-        setTrades(JSON.parse(savedTrades));
+        const parsed = JSON.parse(savedTrades);
+        if (Array.isArray(parsed)) {
+          setTrades(parsed.filter(isValidTrade));
+        }
       } catch (e) {
         console.error("Error loading offline trades", e);
       }
     }
-
   }, []);
 
-  // Save trades to local storage
   const saveTrades = (newTrades: Trade[]) => {
     setTrades(newTrades);
     localStorage.setItem('crypto_trades_v1', JSON.stringify(newTrades));
   };
 
-  // Performance calculations
   const stats = useMemo((): Stats => {
     const now = Date.now();
     const dayMs = 24 * 60 * 60 * 1000;
@@ -600,7 +605,7 @@ function App() {
       <header className="main-header select-none">
         <div className="header-inner px-6 flex items-center justify-between md:grid md:grid-cols-3">
           
-          {/* LEFT SECTION: Logo only with M3 accent coloring */}
+          {/* Logo */}
           <div className="flex items-center gap-4 justify-self-start relative z-50">
             <div className="logo cursor-default flex items-center gap-2">
               <Activity className="text-[var(--accent)] w-5 h-5 animate-pulse" />
@@ -613,26 +618,18 @@ function App() {
             </div>
           </div>
 
-          {/* CENTER SECTION: Material Design 3 Navigation Capsule Tabs */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex justify-self-center">
             <div className="flex items-center gap-4">
-              {[
-                { id: 'journal', label: 'JOURNAL', icon: BookOpen },
-                { id: 'calculator', label: 'CALCULATOR', icon: Calculator },
-                { id: 'stats', label: 'STATS', icon: BarChart3 },
-                { id: 'mistakes', label: 'LESSONS', icon: ShieldAlert },
-                { id: 'settings', label: 'SETTINGS', icon: Settings },
-              ].map(tab => {
+              {TABS.map(tab => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
                 return (
                   <button
                     key={tab.id}
-                    type="button"
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => setActiveTab(tab.id)}
                     className="relative flex flex-col items-center gap-1 group px-2.5 py-1 cursor-pointer outline-none active:scale-95 transition-transform"
                   >
-                    {/* Active Pill Indicator */}
                     <div className="relative w-16 h-8 flex items-center justify-center rounded-full overflow-hidden transition-all duration-300">
                       {isActive && (
                         <motion.div
@@ -643,7 +640,6 @@ function App() {
                       )}
                       <Icon className={`w-5 h-5 transition-colors relative z-10 ${isActive ? 'text-[var(--accent)] font-bold' : 'text-[var(--text-dim)] group-hover:text-[var(--text)]'}`} />
                     </div>
-                    {/* Label */}
                     <span className={`text-[10px] font-bold tracking-widest transition-colors select-none ${isActive ? 'text-[var(--text)] font-extrabold' : 'text-[var(--text-dim)] group-hover:text-[var(--text)]'}`}>
                       {tab.label}
                     </span>
@@ -653,14 +649,12 @@ function App() {
             </div>
           </div>
 
-          {/* RIGHT SECTION: Empty to preserve grid layout */}
+          {/* Right spacer */}
           <div className="flex items-center gap-3.5 justify-self-end relative">
           </div>
 
         </div>
       </header>
-
-      {/* No more top segments in index.tsx because we now use bottom navigation on mobile */}
 
       <main className="dashboard-grid">
         {/* Left column statistics list */}
@@ -684,7 +678,7 @@ function App() {
               <section className="entry-section card">
                 <div className="flex justify-between items-center border-b border-[var(--border)] pb-4 mb-4 flex-wrap gap-2">
                   <h2 className="text-sm font-extrabold tracking-wider uppercase text-[var(--text)] flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-teal-400" /> LOG TRADE MANUALLY
+                    <BookOpen className="w-4 h-4 text-teal-400" /> Log Trade
                   </h2>
                 </div>
 
@@ -874,7 +868,6 @@ function App() {
                         )}
 
                         <button
-                          type="button"
                           className="edit-btn active:scale-90"
                           onClick={() => setEditingTrade(trade)}
                           title="Edit trade details"
@@ -882,9 +875,8 @@ function App() {
                           <Edit3 className="w-3.5 h-3.5 text-[var(--text-dim)] hover:text-[var(--accent)] transition-all" />
                         </button>
 
-                        <button 
-                          type="button"
-                          className="del-btn active:scale-90" 
+                        <button
+                          className="del-btn active:scale-90"
                           onClick={() => {
                             if (confirm("Are you sure you want to delete this log entry permanently?")) {
                               saveTrades(trades.filter(t => t.id !== trade.id));
@@ -951,8 +943,7 @@ function App() {
               <h3 className="text-sm font-extrabold tracking-wider uppercase flex items-center gap-2">
                 <Edit3 className="w-4 h-4 text-blue-500" /> EDIT JOURNAL ENTRY
               </h3>
-              <button 
-                type="button" 
+              <button
                 onClick={() => setEditingTrade(null)}
                 className="text-[var(--text-dim)] hover:text-rose-400 p-1 rounded-lg hover:bg-[var(--input-bg)] transition-all cursor-pointer"
               >
@@ -1181,8 +1172,7 @@ function App() {
         </div>
       )}
 
-      {/* Lightbox Modal overlay for image inspection */}
-      {/* Floating Status / Toast for Import/Export updates */}
+      {/* Toast notification */}
       <AnimatePresence>
         {dataMessage && (
           <motion.div
@@ -1198,7 +1188,7 @@ function App() {
             <Database className="w-5 h-5 flex-shrink-0" />
             <div className="flex flex-col">
               <span className="font-sans font-bold text-xs">
-                {dataMessage.type === 'success' ? 'Database Synced' : 'Data Sync Error'}
+                {dataMessage.type === 'success' ? 'Saved' : 'Save Error'}
               </span>
               <span className="text-[11px] font-medium opacity-90 leading-tight">
                 {dataMessage.text}
@@ -1228,25 +1218,17 @@ function App() {
         </div>
       )}
 
-      {/* Mobile Bottom Navigation Bar (Google Material Design 3 Spec) */}
+      {/* Mobile bottom nav */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-[999] border-t border-[var(--border)] bg-[var(--header-bg)] backdrop-blur-xl pb-safe shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex justify-around items-center h-[76px] px-2 select-none">
-        {[
-          { id: 'journal', label: 'Journal', icon: BookOpen },
-          { id: 'calculator', label: 'Calculator', icon: Calculator },
-          { id: 'stats', label: 'Stats', icon: BarChart3 },
-          { id: 'mistakes', label: 'Lessons', icon: ShieldAlert },
-          { id: 'settings', label: 'Settings', icon: Settings },
-        ].map(tab => {
+        {TABS.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
-              type="button"
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id)}
               className="flex-1 flex flex-col items-center justify-center gap-1 py-1 cursor-pointer outline-none relative active:scale-95 transition-transform"
             >
-              {/* Active Pill Indicator */}
               <div className="relative w-14 h-8 flex items-center justify-center rounded-full overflow-hidden transition-all duration-200">
                 {isActive && (
                   <motion.div
@@ -1257,7 +1239,6 @@ function App() {
                 )}
                 <Icon className={`w-5.5 h-5.5 transition-colors relative z-10 ${isActive ? 'text-[var(--accent)] font-bold' : 'text-[var(--text-dim)]'}`} />
               </div>
-              {/* Label */}
               <span className={`text-[10px] font-bold tracking-wider transition-colors select-none ${isActive ? 'text-[var(--text)] font-extrabold' : 'text-[var(--text-dim)]'}`}>
                 {tab.label}
               </span>
@@ -1282,26 +1263,5 @@ function StatItem({ label, value, isLarge = false }: { label: string, value: num
 }
 
 const container = document.getElementById('root')!;
-let root = (window as any).__reactRoot || (container as any).__reactRoot;
-if (!root) {
-  const hasReactRoot = Object.keys(container).some(key => key.startsWith('__reactContainer'));
-  if (hasReactRoot) {
-    const parent = container.parentNode;
-    if (parent) {
-      const newContainer = container.cloneNode(false) as HTMLElement;
-      parent.replaceChild(newContainer, container);
-      root = ReactDOM.createRoot(newContainer);
-      (newContainer as any).__reactRoot = root;
-      (window as any).__reactRoot = root;
-    } else {
-      root = ReactDOM.createRoot(container);
-      (container as any).__reactRoot = root;
-      (window as any).__reactRoot = root;
-    }
-  } else {
-    root = ReactDOM.createRoot(container);
-    (container as any).__reactRoot = root;
-    (window as any).__reactRoot = root;
-  }
-}
+const root = ReactDOM.createRoot(container);
 root.render(<App />);

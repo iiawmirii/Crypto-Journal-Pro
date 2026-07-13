@@ -37,8 +37,8 @@ export default function StopLossMistakes({ trades }: StopLossMistakesProps) {
         <div className="flex items-center gap-3">
           <ShieldAlert className="text-rose-500 w-5 h-5 shrink-0" />
           <div>
-            <h2 className="text-base font-extrabold tracking-tight">STOP-LOSS ACTIVATION ARCHIVE</h2>
-            <p className="text-xs text-[var(--text-dim)]">Pinpoint and review recurring tactical errors and volatility triggers offline.</p>
+            <h2 className="text-base font-extrabold tracking-tight">Stop-Loss History</h2>
+            <p className="text-xs text-[var(--text-dim)]">Review your stop-loss activations and recurring mistakes.</p>
           </div>
         </div>
         <div className="flex bg-rose-500/10 text-rose-500 px-3 py-1 border border-rose-500/15 rounded-full font-mono text-[10px] font-semibold tracking-wider">
@@ -55,8 +55,8 @@ export default function StopLossMistakes({ trades }: StopLossMistakesProps) {
                  background: 'linear-gradient(135deg, var(--segment-bg) 0%, rgba(239, 68, 68, 0.03) 100%)',
                }}>
             <div>
-              <span className="text-[9px] text-rose-500 font-bold tracking-widest block mb-1">SUMMARY DRAWDOWN TRACKER</span>
-              <h3 className="font-extrabold text-lg tracking-tight" style={{ color: 'var(--text)' }}>MISTAKE AUDITING</h3>
+              <span className="text-[9px] text-rose-500 font-bold tracking-widest block mb-1">Summary</span>
+              <h3 className="font-extrabold text-lg tracking-tight" style={{ color: 'var(--text)' }}>Overview</h3>
               <p className="text-xs mt-2 leading-relaxed" style={{ color: 'var(--text-dim)' }}>
                 You have hit your stop-loss <b style={{ color: 'var(--loss)' }}>{totalSLHitsCount} times</b>, contributing to a total drawdown loss of <b style={{ color: 'var(--loss)' }}>${totalSLLostAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</b>.
               </p>
@@ -64,13 +64,13 @@ export default function StopLossMistakes({ trades }: StopLossMistakesProps) {
             
             <div className="p-3 rounded-xl border font-mono text-[10px] flex items-start gap-2" style={{ background: 'var(--input-bg)', borderColor: 'var(--border)', color: 'var(--text-dim)' }}>
               <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
-              <span className="leading-normal">Identifying specific activation patterns is the fastest path to profitability. Do not repeat identical errors.</span>
+              <span className="leading-normal">Track patterns to avoid repeating the same mistakes.</span>
             </div>
           </div>
 
           {/* Grouped Mistakes List */}
           <div className="md:col-span-2 flex flex-col gap-3">
-            <span className="text-[10px] font-semibold tracking-widest uppercase block text-[var(--text-dim)]">FREQ OF SL MISTAKE TRIGGERS</span>
+            <span className="text-[10px] font-semibold tracking-widest uppercase block text-[var(--text-dim)]">Trigger Frequency</span>
             
             <div className="flex flex-col gap-2 max-h-[350px] overflow-y-auto pr-1">
               {groupedMistakes.map((item, idx) => (
@@ -91,7 +91,7 @@ export default function StopLossMistakes({ trades }: StopLossMistakesProps) {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-[9px] font-mono block text-[var(--text-dim)]">DRAWDOWN CAPITAL</span>
+                    <span className="text-[9px] font-mono block text-[var(--text-dim)]">Loss</span>
                     <span className="text-xs font-mono font-semibold" style={{ color: 'var(--loss)' }}>-${item.totalLoss.toFixed(2)}</span>
                   </div>
                 </div>
@@ -116,11 +116,11 @@ export default function StopLossMistakes({ trades }: StopLossMistakesProps) {
       {/* Audit Historic Trades Segment */}
       <div className="border-t pt-4 flex flex-col gap-3" style={{ borderColor: 'var(--border)' }}>
         <h3 className="text-xs font-bold tracking-widest uppercase flex items-center gap-1.5 text-[var(--text-dim)]">
-          <TrendingDown className="w-3.5 h-3.5 text-rose-500" /> RECENT STOP-LOSS LOG HISTORICAL DEEP-DIVE
+          <TrendingDown className="w-3.5 h-3.5 text-rose-500" /> Recent Stop-Loss Log
         </h3>
         
         {slTrades.length === 0 ? (
-          <p className="text-xs italic py-2 text-[var(--text-dim)]">All clear. No drawdowns found within local storage.</p>
+          <p className="text-xs italic py-2 text-[var(--text-dim)]">No stop-losses recorded.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {slTrades.slice(0, 6).map(trade => (

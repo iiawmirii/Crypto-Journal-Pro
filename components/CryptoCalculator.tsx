@@ -28,14 +28,12 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
   const [leverage, setLeverage] = useState<string>('10');
   const [margin, setMargin] = useState<string>('100');
 
-  // Target Steps
   const [targets, setTargets] = useState<{ price: string; pct: string }[]>([
     { price: '52000', pct: '40' },
     { price: '54000', pct: '30' },
     { price: '56000', pct: '30' },
   ]);
 
-  // Autofill targets based on Entry & Stop Loss to help user experience
   useEffect(() => {
     const entry = parseFloat(entryPrice);
     const sl = parseFloat(stopLoss);
@@ -60,7 +58,6 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
     }
   }, [entryPrice, stopLoss, direction, targets.length]);
 
-  // Calculations
   const entry = parseFloat(entryPrice) || 0;
   const sl = parseFloat(stopLoss) || 0;
   const lev = parseFloat(leverage) || 0;
@@ -69,13 +66,11 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
   const positionSize = marg * lev;
   const quantity = entry > 0 ? positionSize / entry : 0;
 
-  // StopLoss Loss calculation
   const isLong = direction === 'long';
   const slDifference = isLong ? entry - sl : sl - entry;
   const lossAtSL = quantity * slDifference;
   const lossPctOfMargin = marg > 0 ? (lossAtSL / marg) * 100 : 0;
 
-  // Calculate target steps
   let totalPctClosed = 0;
   let totalProfit = 0;
   let closedWeightedSum = 0;
@@ -211,25 +206,13 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
         {/* Left Side: Inputs */}
         <div className="flex flex-col gap-4">
           <div className="flex p-1 rounded-full border border-[var(--border)] bg-[var(--input-bg)] select-none">
-            <button
-              type="button"
-              className={`flex-1 py-2 text-xs font-bold rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 outline-none ${
-                direction === 'long'
-                  ? 'bg-[var(--segment-selected)] text-[var(--segment-selected-text)] shadow-sm font-extrabold'
-                  : 'hover:text-[var(--text)] text-[var(--text-dim)]'
-              }`}
-              onClick={() => setDirection('long')}
+              <button
+                onClick={() => setDirection('long')}
             >
               <TrendingUp className="w-3.5 h-3.5 text-emerald-500" /> LONG POSITION
             </button>
-            <button
-              type="button"
-              className={`flex-1 py-2 text-xs font-bold rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 outline-none ${
-                direction === 'short'
-                  ? 'bg-[var(--segment-selected)] text-[var(--segment-selected-text)] shadow-sm font-extrabold'
-                  : 'hover:text-[var(--text)] text-[var(--text-dim)]'
-              }`}
-              onClick={() => setDirection('short')}
+              <button
+                onClick={() => setDirection('short')}
             >
               <TrendingDown className="w-3.5 h-3.5 text-rose-500" /> SHORT POSITION
             </button>
@@ -307,7 +290,6 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
               TAKE-PROFIT TARGETS ({targets.length})
             </span>
             <button
-              type="button"
               className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-extrabold bg-[var(--accent-soft)] hover:bg-[var(--accent)] text-[var(--accent)] hover:text-[var(--button-primary-text)] rounded-full transition-all border border-[var(--border)] active:scale-95 shadow-sm cursor-pointer"
               onClick={handleAddTarget}
             >
@@ -358,7 +340,6 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
                   </div>
                   {targets.length > 1 && (
                     <button
-                      type="button"
                       onClick={() => handleDeleteTarget(idx)}
                       className="text-[var(--text-dim)] hover:text-rose-500 p-1 rounded transition-all cursor-pointer hover:bg-[var(--card-bg)] shrink-0"
                       title="Delete target step"
@@ -422,7 +403,6 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
 
         <div className="quick-journal-actions">
           <button
-            type="button"
             className="flex-1 py-2.5 text-white shadow-sm font-extrabold rounded-lg text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 bg-[#10b981] hover:bg-[#059669] active:scale-95 disabled:bg-[var(--border)] disabled:text-[var(--text-dim)] disabled:opacity-40 disabled:cursor-not-allowed duration-150"
             onClick={() => handleCreateTrade('gain')}
             disabled={!(entry > 0 && marg > 0)}
@@ -430,7 +410,6 @@ export default function CryptoCalculator({ onLogTrade }: CryptoCalculatorProps) 
             LOG PROFIT (+${totalProfit.toFixed(2)})
           </button>
           <button
-            type="button"
             className="flex-1 py-2.5 text-white shadow-sm font-extrabold rounded-lg text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 bg-[#f43f5e] hover:bg-[#e11d48] active:scale-95 disabled:bg-[var(--border)] disabled:text-[var(--text-dim)] disabled:opacity-40 disabled:cursor-not-allowed duration-150"
             onClick={() => handleCreateTrade('loss')}
             disabled={!(entry > 0 && marg > 0)}

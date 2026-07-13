@@ -234,8 +234,8 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
           <div className="flex items-center gap-3">
             <BarChart3 className="text-[var(--accent)] w-5 h-5" />
             <div>
-              <h2 className="text-base font-extrabold tracking-tight uppercase">PnL Calculations & Performance Stats</h2>
-              <p className="text-xs text-[var(--text-dim)]">Inspect win rates, profit factors, averages, and detailed offline journal analytics.</p>
+              <h2 className="text-base font-extrabold tracking-tight uppercase">Performance Stats</h2>
+              <p className="text-xs text-[var(--text-dim)]">Win rates, profit factors, and performance breakdowns.</p>
             </div>
           </div>
 
@@ -246,7 +246,6 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
               return (
                 <button
                   key={option}
-                  type="button"
                   onClick={() => setRangeOption(option)}
                   className={`relative px-4 py-1.5 text-[10px] font-bold rounded-full border transition-all cursor-pointer outline-none select-none flex items-center justify-center active:scale-95 ${
                     isActive
@@ -452,7 +451,6 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
 
               return (
                 <button
-                  type="button"
                   key={index}
                   onClick={() => setSelectedDayTimestamp(cell.date.getTime())}
                   className="rounded-xl flex flex-col p-2 min-h-[64px] transition-all justify-between text-left border border-transparent select-none cursor-pointer focus:outline-none hover:border-[var(--accent)]"
@@ -510,11 +508,11 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
           <div className="flex flex-col gap-3 overflow-y-auto max-h-[360px] pr-1">
             {selectedDayTimestamp === null ? (
               <div className="text-center py-10 font-sans text-xs text-[var(--text-dim)] leading-relaxed">
-                Click any calendar grid slot above to audit specific trade log results, prices or images recorded.
+                Click a date to view trades.
               </div>
             ) : selectedDayTrades.length === 0 ? (
               <div className="text-center py-10 font-sans text-xs text-[var(--text-dim)] leading-relaxed">
-                No trades recorded offline on this local calendar date.
+                No trades on this date.
               </div>
             ) : (
               selectedDayTrades.map(trade => (
@@ -563,7 +561,6 @@ export default function PnLStats({ trades, onEditTrade }: PnLStatsProps) {
 
                   {/* quick edit launcher */}
                   <button
-                    type="button"
                     onClick={() => onEditTrade(trade)}
                     className="absolute bottom-2.5 right-2.5 h-6 w-6 rounded-lg bg-[var(--card-bg)] hover:bg-[var(--accent)] text-[var(--text-dim)] hover:text-white border border-[var(--border)] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm cursor-pointer"
                     title="Edit trade details"
